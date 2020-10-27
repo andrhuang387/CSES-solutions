@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 1000000007
+lli n,x;
+int main()
+{
+
+    cin>>n>>x;
+    vector<int> children;
+    for(lli i=0;i<n;i++){
+        int p;
+        cin>>p;
+        children.push_back(p);
+    }
+    sort(children.begin(), children.end());
+    int ans  =0;
+    for(int i  =0, j = n-1;i<j;){
+        while( i<j && children[i] + children[j]>x){
+            j--;
+        }
+        if(i>=j)
+            break;
+        ans++;
+        cout<<i<<" "<<j<<endl;
+        i+=1; j -=1;
+        cout<<i<<" "<<j<<endl;
+    }
+    cout<<n -ans<<endl;
+
+
+
+}
