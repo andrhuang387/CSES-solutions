@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200001
+lli n,x;
+bool cmp(vector<lli> a, vector<lli> b)
+{
+    if(a[0]!= b[0]) return a[0]<b[0];    ///sorted by time
+    else return a[1]>b[1];    ///sorted by leave and arrive time
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin>>n;
+    vector<vector<lli>> points;
+    for(lli i=0;i<n;i++){
+        lli a, b;
+        cin>>a>>b;
+        vector<lli>temp;
+        temp.push_back(a); temp.push_back(1); temp.push_back(i); points.push_back(temp);
+        temp.clear();
+        temp.push_back(b); temp.push_back(-1); temp.push_back(i); points.push_back(temp);
+    }
+    sort(points.begin(), points.end(), cmp);
+   //for(auto it:points) cout<<it[0]<<"  "<<it[1]<< " "<<it[2]<<endl;
+    set<lli> used;
+    set<lli> available;
+    for(int i = 1; i<=n;i++) available.insert(i);
+    //for(auto it: available)cout<<it<<endl;
+    lli connect [200001];
+    for(auto it: points)
+    {
+        if(it[1] == 1){
+            used.insert(*available.begin());
+            connect[it[2]] =*available.begin();
+            //
+            available.erase(available.begin());
+        }
+        else if(it[1]==-1){
+            available.insert(connect[it[2]]);
+            //cout<<connect[it[2]]<<endl;
+        }
+    }
+    cout<<used.size()<<endl;
+    for(int i=0;i<n;i++)printf("%d ", connect[i]);
+
+
+
+
+
+}
