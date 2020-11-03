@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200000
+int n ,k;
+array<lli,2> a[MAXN];
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin>>n>>k;
+    vector<pair<int,int>> times;
+    for(int i = 0;i<n;i++){
+        lli begin, end;
+        cin>>begin>>end;
+        times.push_back(make_pair(end,begin));
+    }
+    sort(times.begin(), times.end());
+    int ans = 0;
+        multiset<int> people;
+    for(int i  =0;i<n;i++){
+        bool done  =false;
+        auto it = people.upper_bound(times[i].second);
+        if(it!= people.begin()){
+            --it;
+            if(*it<=times[i].second){
+                people.erase(it);
+                people.insert(times[i].first);
+                done = true;
+                ans++;
+            }
+        }
+        if(people.size()<k && done==false){
+            people.insert(times[i].first);
+            ans++;
+        }
+    }
+    cout<<ans<<endl;
+
+}
