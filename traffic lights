@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200000
+lli n ,x;
+array<lli,2> a[MAXN];
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin>>x>>n; ///length of street and number of traffic lights
+    set<lli> road;
+    road.insert(0);
+    road.insert(x);
+    multiset<lli> passage;
+    passage.insert(x);
+    for(int i  =0;i<n; i++){
+        lli point;
+        cin>>point;
+        road.insert(point);
+        auto location = road.find(point);
+        auto lower = location;
+        auto higher = location;
+        --lower;
+        ++higher;
+        //cout<<*higher<<"  "<<*lower<<endl;
+        int distance  = *higher  - *lower;
+        auto old_distance = passage.find(distance);
+        passage.erase(old_distance);
+        passage.insert(*location - *lower);
+        passage.insert(*higher - *location);
+        cout<<*passage.rbegin()<< " ";
+
+
+    }
+    return 0;
+
+}
