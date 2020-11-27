@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200000
+lli x, n;
+////STEPS
+///1: input values
+// have an array;
+///go from right to left and have a multimap of value and position
+/// all bigger immediately remove and process, and then put in value into multimap;
+///Have array of positions and add to it
+///Time complexity n (add and remove)
+int main()
+{
+     cin>>n;
+     lli a[MAXN];
+     for(int i  =1;i<=n;i++){
+        cin>>a[i];
+    }
+    multimap<lli, int> mp;
+    int ans[n+1];
+    for(int i  =n; i>=1 ;i--){
+        lli nv = a[i];
+        auto pos = mp.upper_bound(nv); ///Dont delete as it gets really weird with formatting
+        auto old=  pos;
+        while(pos!= mp.end()){
+            ans[pos->second] = i;
+            pos++;
+        }
+        mp.erase(old, mp.end() );
+        mp.insert(pair<lli, int> (nv, i));
+    }
+    for(auto it: mp){
+        ans[it.second] = 0;
+    }
+    for(int i  =1;i<=n;i++){
+        cout<<ans[i]<<" ";
+    }
+}
