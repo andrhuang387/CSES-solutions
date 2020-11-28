@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200000
+#define faster ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
+#define mod 1000000007
+lli k, n;
+int main()
+{
+    faster;
+    cin>>n>>k;
+    lli a[MAXN];
+    for(int i  =0;i<n;i++){
+        cin>>a[i];
+    }
+    multiset<lli> arr;
+    queue<int> q;
+    for(int i  =0;i<k;i++){
+        arr.insert(a[i]);
+        q.push(a[i]);
+    }
+    //for(auto it: arr)cout<<it<< " ";
+    //cout<<endl;
+    auto median = arr.begin();
+    for(int i  =0;i<(k-1)/2;i++){
+        median++;
+    }
+    //cout<<*median<<endl;
+    for(int i  =k;i<n;i++){
+        cout<<*median<< " ";
+        lli remove = q.front();  ///New remove value
+        //cout<<remove<<endl;
+        //cout<<"ARRAY " ;
+        //for(auto it: arr)cout<<it<< " ";
+        //cout<<endl;
+        q.pop();
+
+        arr.insert(a[i]);
+        if(remove == *median && a[i] == *median){
+            q.push(a[i]);
+            continue;                                             ///Since the middle is preserved, dont add or erase
+        }
+        else if(a[i]>= *median &&  remove< *median) median++;
+        else if(a[i]<*median && remove>=*median) median--;
+        else if(remove == *median && a[i] > *median)median++;
+        auto found = arr.find(remove);
+        arr.erase(found);
+        q.push(a[i]);
+    }
+    cout<<*median<<endl;
+
+
+}
