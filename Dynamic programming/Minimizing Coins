@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 100000001
+#define lli long long int
+#define mod 1000000007
+vector<int> dice = {1,2,3,4,5,6};
+lli n;
+lli num[1000001];
+int main()
+{
+    num[0] = 1;
+    cin>>n;
+    for(int x  = 1; x<=n;x++){
+        for(auto d:dice){
+            if(x - d >=0){
+                num[x]+= num[x-d];
+                num[x] %=123456123456mod;
+            }
+        }
+        num[x] %=mod;
+    }
+    cout<<num[n]%mod;
+}
