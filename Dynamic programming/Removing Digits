@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 100000001
+#define lli long long int
+#define mod 1000000007
+lli best[10000001];
+lli has[10000001];
+lli n, x;
+int find(int x)
+{
+    if(x<0) return MAXN;
+    if(x==0) return 0;
+    if(has[x]) return best[x];
+    int temp = x;
+    vector<int> digits;
+    while(temp>=1){
+        if(temp%10 == 0){
+            temp/=10;
+            continue;
+        }
+        digits.push_back(temp%10);
+        temp/=10;
+    }
+    int least = MAXN;
+
+    for(auto d: digits){
+        least = min(least, find(x-d)+1);
+    }
+    best[x] = least;
+    has[x] = true;
+    return least;
+
+
+}
+int main()
+{
+   cin>>n;
+   cout<<find(n);
+}
