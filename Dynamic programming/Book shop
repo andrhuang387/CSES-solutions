@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 100000001
+#define lli long long int
+#define mod 1000000007
+lli sum[1001][1001];
+lli has[10000001];
+int h[1001];
+int s[1001];
+lli n, x;
+int main()
+{
+   cin>>n>>x; ///books, then budget
+   vector<int>prices(n), pages(n);
+   for(int &i: prices){
+    cin>>i;
+   }
+   for(int &i: pages){
+    cin>>i;
+   }
+   vector<vector<int>>dp(n+1, vector<int>(x+1, 0));
+   for(int i = 1; i<=n; i++){
+    for(int j = 0;j<=x; j++){
+        dp[i][j] = dp[i-1][j]; /// i means books, j means money
+        int left = j - prices[i-1];
+        if(left>=0){
+            dp[i][j] = max(dp[i][j], dp[i-1][left] + pages[i-1]);
+        }
+    }
+   }
+   cout<<dp[n][x];
+
+
+}
