@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 3003
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define mod 1000000007
+lli power(lli base, lli exp)
+{
+  lli ret = 1;
+  while(exp){
+    if(exp&1){
+      ret = ret*base%mod;
+    }
+    base = base*base%mod;
+    exp/=2;
+  }return ret;
+}
+
+ int main()
+ {
+   int n;
+   cin>>n;
+   lli numdivisor = 1;
+   lli sumdivisor = 1;
+   lli productdivisor = 1;
+   lli divcount2 =1;
+   lp(i,n){
+     lli base, exp;
+     cin>>base>>exp;
+     numdivisor = numdivisor * (exp+1)%mod;
+     sumdivisor = sumdivisor * (power(base, exp+1)-1)%mod*power(base-1, mod-2)%mod;
+     lli x = exp+1;
+     lli y = exp;
+     if(x&1)y /=2;
+     else x/=2;
+     productdivisor = power(productdivisor, exp+1) * power(power(base, x*y), divcount2)%mod;
+     divcount2 = divcount2 * (exp + 1) % (mod - 1);
+   }
+   cout<<numdivisor<< " " ;
+   cout<<sumdivisor<< " ";
+   cout<<productdivisor<<endl;
+   
+ }
