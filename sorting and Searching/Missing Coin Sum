@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 101
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+//#define mod 1000000007
+//check for "completeness"
+//first sort by size
+// if next element  <= sum previous element +1, then we know that every value in between that and the next element can be created
+// extrapolating from that, every element from sum of previous elements and that element can be fufilled
+///therefore, for the future elements, if the sum of the previous elements +1 is less than the next element, that value cannot be filled so you output
+int main()
+{
+    int n;
+    cin>>n;
+    vi a(n);
+    for(auto &it: a){
+        cin>>it;
+    }
+    sort(a.begin(), a.end());
+    lli ans  =0;
+    for(auto it: a){
+        if(it <= ans+1){
+            ans += it;
+        }
+        else{
+            cout<<ans+1<<endl;
+            return 0;
+        }
+    }
+    cout<<ans+1<<endl;
+
+
+}
