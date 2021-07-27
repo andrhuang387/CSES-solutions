@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define MAXN 200001
+#define INF 200000000000001
+#define lp(i,n) for(int i =0 ; i <n; i++)
+int n, k;
+vector<int>a;
+bool works(lli ub)
+{
+  //cout<<ub<<endl;
+  lli largest = 0;
+  lli sum = 0;
+  int div = k;
+  div--;
+  lp(i, n){
+    sum += a[i];
+    largest = max(largest, sum);
+    if(sum > ub)return false;
+    if(i != n-1 && sum + a[i+1] > ub && div!= 0 ){
+      div--;
+      sum = 0;
+    }
+  }
+  return (ub>=largest);
+}
+int main()
+{
+  cin>>n>>k;
+  a.resize(n);
+  lli total = 0;
+  lp(i, n){
+    cin>>a[i];
+    total += a[i];
+  }
+  lli loc = 0;
+  for(lli x = total/2; x>0; x/=2){
+    //cout<<loc+x<< " " <<x<< "  "<<works(loc+x)<<endl;
+    while(!works(loc+x))loc+=x;///if not all less than val
+  }
+  cout<<loc+1<<endl;
+}
