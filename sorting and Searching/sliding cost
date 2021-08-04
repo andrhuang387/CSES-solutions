@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+/*best way is to designate the median as the value we set everything to
+   the cost is  = sum smaller  +sum larger.
+       sumsmaller = medan  -e
+       sumlarger =  e - median
+    therefore, when k is even (both parts equal numbers), the  cost is sumsmaller  +sumlarger = elarger - esmaller
+    when k is odd, one part will have more. We can designate the lower part as ceil(k/2) so that it includes the top. Because there is an extra at the bottom, add the median to compensate
+       
+*/
+lli n, k;
+lli arr[MAXN];
+multiset<lli> up;
+multiset<lli>low;
+lli slow, sup;
+void add(lli val)
+{
+    lli a = *low.rbegin();   ///the used median
+    if(a<val){ ///if addign element larger, add to up 
+        up.insert(val); sup += val;
+        if(up.size()  >k/2){   //when up is more than half, you want to remove the bottommost value and add it to the low set, remember to update the sms
+            lli moving  =*up.begin();  ///get location
+            low.insert(moving); slow+= moving;
+            up.erase(up.find(moving)); sup -= moving;
+        }
+    }
+    else{ /// if smaller, add to low
+        low.insert(val); slow+=val;
+        if(low.size() > (k+1)/2){   ///k+1/2 since it is supposed to take the ceil of k/2; (especially when it is odd). move the "median" to the up set and update sums 
+            lli moving = *low.rbegin();
+            up.insert(*low.rbegin()); sup+= moving;
+            low.erase(low.find(*low.rbegin())); slow -= moving;
+        }
+    }
+}
+void er (lli val) ///delete values outside of the subarray index
+{
+    if(up.find(val)!= up.end()) up.erase(up.find(val)), sup -= val; ///check wher the value is found in 
+    else low.erase(low.find(val)), slow -= val;
+    if(low.empty()){ ///low should never be empty if k >=1. this is because in the case that there is only 1 vaue 
+        lli moving = *up.begin();
+        low.insert(*up.begin()); slow += moving;
+        up.erase(up.find(*up.begin())); sup-= moving;
+    }
+}
+lli med(){    ///compensaste value when k is odd and is the median
+    return (k%2 ==0? 0 : *low.rbegin());
+}
+int main()
+{
+    cin>>n>>k;
+    lp(i,n)cin>>arr[i];
+    low.insert(arr[0]); slow+=arr[0]; ///designate the first to be lowest, (since ceil k/2)
+    for(int i = 1;  i<k; i++) add(arr[i]); ///use add functino to add into
+    cout<<sup- slow  + med(); if(n!= 1) cout<< " " ;
+    for(int  i = k; i < n; i++){   //for each other value, add into and remove the previous 
+        if(k==1){
+            add(arr[i]);
+            er(arr[i-k]);
+        }
+        else{
+            er(arr[i-k]);
+            add(arr[i]);
+        }
+        cout<<sup - slow  +med(); if(i!= n-1) cout<< " ";
+    }
+    cout<<endl;
+}
