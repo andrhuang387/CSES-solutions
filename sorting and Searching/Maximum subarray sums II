@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+/*
+use similar method as to the one above.  since sorting by value and index is impossible to do, just find the index and remove the that value from the set
+get a multiest of possible prefix sums to add
+check all prefix sums that work which cause the subarray to be required length
+  - we dont actualyl need to loop through, we just want the smallest value so that the subarray ends up a maximum
+*/
+int main()
+{
+   lli n,a,b;
+   lli psum[MAXN]; ///apparently an array is safer than a vector because of bad alloc
+   cin>>n>>a>>b;
+   multiset<lli> valid;
+   psum[0]= 0;
+   lli sum  =0, ans = -1000000000000000;  ///make ans initially super negative because it is possible that the resulting subarray sum maximum is negative when all values are negative
+   for(int i  =1; i<=n; i++){ ///I chose to index from 1 because when we index from 0, we lose the value 0 prefix sum (of nothing) when i first becomes a
+    lli v; cin>>v; sum +=v;psum[i] = sum; /// add to prefix sum and add to the array
+    if(i>=a){
+        valid.insert(psum[i-a]);   ///when it becomes a, add the possible prefix sum. no need to make a "waiting queue" because not necessary
+        ans=max(ans, sum  - *valid.begin());
+    }
+    if(i>=b)valid.erase(valid.find(psum[i-b]));
+   }
+   cout<<ans;
+}
