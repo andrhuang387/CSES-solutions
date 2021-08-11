@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+using namespace std;
+/*
+use two pointers
+*/
+int main()
+{
+    //ifstream fin("D:/inp.txt");
+    int n, m, k;
+    cin>>n>>m>>k;
+    vector<int> desired;
+    vector<int>actual;
+    for(int i =0; i<n; i++){
+        int des;
+         cin>>des;
+         desired.push_back(des);
+    }
+    for(int i = 0; i<m; i++){
+        int re;
+         cin>>re;
+         actual.push_back(re);
+    }
+    sort(desired.begin(),desired.end());
+    sort(actual.begin(), actual.end());
+    int i = 0, j  =0, sum = 0;
+    while(i < desired.size() && j <actual.size()){
+        if(abs(actual[j] - desired[i]) <= k){
+            sum++;
+             j++;
+              i++;
+        }
+        else if (actual[j] < desired[i] - k)
+            j++;
+        else
+            i++;
+    }
+    cout<<sum<<endl;
+}
