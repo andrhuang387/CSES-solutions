@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define lli long long int
+/*
+    I used ans = *v.begin() because it is posible all of them are negative and 0 would be a wrong answer
+    the algorithm is o(n, m). where the idea is to keep adding to the value until an element is larger. this is because you can think of it as this:
+     - the prefix of the element is a net positive/negative. It is impossible that the prefix is suboptimal from negatives because if there was a suboptimal area, it would be cut off
+     since it would be a net negative to the next value after the negative
+*/
+int main() {
+    int n;
+    cin>>n;
+    vector<lli> v(n);
+    for(auto &it: v)cin>>it;
+    lli current = 0;
+    lli ans= *v.begin();
+    for(auto it: v){
+      current = max(current+ it, it);
+      ans = max(ans, current);
+    }
+    cout<<ans<<endl;
+}
