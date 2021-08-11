@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define ar array
+/*
+   naive solution is to check for each pair of ranges and see if one beginning and end and smaller and larger than the other, respectively.
+   therefore, we can use this idea to optimize our code. 
+   optimization 1. have a sorted array of all starting locations preceding current. That way, you only need to check the values preceding it
+   optimization 2: all you need to know is if there exists a value which is greater than the end value of current range in previous ranges. this can be done by 
+   getting the largest end value of all of them
+   
+   we can then use this idea to implement the contained vector. But what about the contains vector? well, we can use a similar approach but go backwards.
+   i.e find the minimum end point because all ranges beyond the current start fter the current range so we need to find one that ends before the current range ends
+   when the minimum is less than the current end, then you have a possible one
+*/
+bool cmp(vector<int> a, vector<int> b)
+{
+    return a[0] != b[0]  ? a[0] < b[0]: a[1] > b[1];
+}
+int main() {
+    int n;
+    cin>>n;
+    vector<vector<int>> val;
+    lp(i, n){
+        int x,y;
+        cin>>x>>y;
+        val.pb({x,y,i});
+    }
+    sort(val.begin(), val.end(), cmp);
+    int largest  =0;
+    vector<int> contains(n);
+    vector<int> contained(n);
+    for(int i  =0 ; i < n ; i++){
+        //cout<<val[i][0]<< " " <<val[i][1]<<endl;
+        if(largest >= val[i][1])contained[val[i][2]] = 1;
+        largest  = max(largest, val[i][1]);
+    }
+    int smallest= 1000000004;
+    for(int i = n-1; i>=0; i--){
+        if(smallest <= val[i][1]) contains[val[i][2]] = 1;
+        smallest = min(smallest, val[i][1]);
+    }
+    for(auto it: contains)cout<<it<< "  ";
+    cout<<endl;
+    for(auto it: contained)cout<<it<< " " ;
+}
