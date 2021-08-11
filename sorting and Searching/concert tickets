@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+/*
+ have a set
+ use upper bound -1. if upper bound is the first element, then it cannot get a ticket
+*/
+int main() {
+    int n, m;
+    cin>>n>>m;
+    vector<int> c(m);
+    multiset<int> t;
+    lp(i,n){
+      int x; cin>>x;
+      t.insert(x);
+    }
+    for(auto &it: c)cin>>it;
+    lp(i,m){
+        auto it = t.upper_bound(c[i]);
+        if(it == t.begin()){
+            cout<<-1<<endl;
+            continue;
+        }
+        it--;
+        cout<<*it<<endl;
+        t.erase(it);
+    }
+}
