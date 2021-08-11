@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+ /*
+ use the thingy similar to the 2SUM method where you have a pointer pointing left and a pointer pointing right
+ */
+int main() {
+    int n,x;
+    cin>>n>>x;
+    vector<int> a(n);
+    for(auto &it: a)cin>>it;
+    sort(a.begin(), a.end());
+    int l  = 0, r = n-1;
+    int ans  =0;
+    while(l< r){
+        if(a[l]  +a[r] > x) ans++, r--;
+        else ans++, r--, l++;
+    }
+    cout<<ans + (l ==r? 1: 0)<<endl;
+}
