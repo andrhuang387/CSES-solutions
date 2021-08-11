@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<lli,lli>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define ar array
+
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef tree<pair<int, int>,null_type,less<pair<int, int>>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+
+ /*
+ similar to the nested ranges check, this time we count the number of values with an ordered set
+ note 1: we append as we add since every element in the set has a starting value before the current range
+ note 2: you can notice that we do i - amount. since i is zero based, it automatically "eliminates the current range from the answer"
+ note 3: I decided to do val[i][1] -1 since I wanted to include those values who have same ending positions but start at a different position. there are 2 cases:
+     Note val [i][1]-1 , val[i][0] is not in the set: this is because we sorted it so that the the vector of points is sorted by smallest start->largest, largest end->smallest end
+     therefore, when you reverse, the largest.end has 
+     it is the same as normal
+note 4: similarly, I did val[i][1] + 1 for the values, since I wanted to include the values who have the same ending positions but start at a different position
+otherwise, for instance {1,6}, {3, 6}; when looking for 3,6, it states that 1,6 is not included when it should be 
+-----
+Overall verdict: review this as its pretty important and even I didnt really understand my own code or why it worked
+ */
+bool cmp(vector<int> a, vector<int> b)
+{
+    return a[0] != b[0]  ? a[0] < b[0]: a[1] > b[1];
+}
+int main() {
+    int n;
+    cin>>n;
+    vector<vector<int>> val;
+    lp(i, n){
+        int x,y;
+        cin>>x>>y;
+        val.pb({x,y,i});
+    }
+    sort(val.begin(), val.end(), cmp);
+    int largest  =0;
+    vector<int> contains(n);
+    vector<int> contained(n);
+    // -------- above is the same as the original
+    ordered_set ss, sed;
+    for(int i  =0 ; i < n ; i++){
+        contained[val[i][2]] = i- sed.order_of_key({val[i][1]-1, val[i][0]}); 
+        
+        sed.insert({val[i][1], val[i][0]});
+    }
+    int smallest= 1000000004;
+    for(int i = n-1; i>=0; i--){
+        contains[val[i][2]] = ss.order_of_key({val[i][1]+1, val[i][0]});
+        ss.insert({val[i][1], val[i][0]});
+    }
+    for(auto it: contains)cout<<it<< " ";
+    cout<<endl;
+    for(auto it: contained)cout<<it<< " " ;
+}
