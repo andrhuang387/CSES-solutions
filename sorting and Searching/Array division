@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    to solve, use binary search for the upper bound of elements per segment.
+    loop through and add sum. taking note of the largest per segment
+    if the sum > the upper bound, return false
+    if i isnt the end and sum +  the next element is greater than the upper bound and you still have divisors left, subtract from divisors and make sum = 0
+*/
+lli n, k;
+vector<int>a;
+bool works(lli ub)
+{
+    lli largest = 0;
+    lli sum = 0;
+    int div = k;
+    div--;
+    lp(i, n){
+        sum+=a[i];
+        largest = max(largest, sum);
+        if(sum>ub)return false;
+        if(i != n-1 && sum+ a[i+1] > ub && div!= 0){
+            div--;
+            sum = 0;
+        }
+    }
+    return ub>=largest;
+}
+int main() {
+    cin>>n>>k;
+    a.resize(n);
+    lli total = 0;
+    lp(i,n){
+        cin>>a[i];
+        total+=a[i];
+    }
+    lli loc = 0;
+    for(lli x = total/2; x>0; x/=2){
+        while(!works(loc+x))loc+=x;
+    }
+    cout<<loc+1;
+
+}
