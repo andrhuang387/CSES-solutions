@@ -29,11 +29,7 @@ int main() {
     int pos = 0;
     for(int i = 0 ; i <a.size(); i++){
         while(smallest.size() >  0 &&  smallest.back().f >=a[i]) smallest.pop_back();
-
-
-        ///get value
         cout<< smallest.back().s<< " ";
-        ///add
         smallest.pb({a[i], i+1});
     }
     return 0;
