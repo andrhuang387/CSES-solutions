@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    did not solve by myself
+    define the sum of all values as s = cost - smaller, s2 = larger - cost;
+    therefore s  +s2 = larger - smaller. But since there is an unevenness when they ave different parities, we let s have the extra element. Thus, when this happens, we have to add the cost (since its partner is missing)
+    this extra should be the low.rbegin(), which will serve as the x in our case
+    continue doing it and add/erasing
+    if k ==1, you want to add then erase because if you erase, then it doesnt work since the code makes it so that low has at least 1 element
+
+*/
+lli n, k;
+lli arr[MAXN];
+multiset<lli> up;
+multiset<lli> low;
+lli slow, sup;
+void add(lli val)   ///dynamically shift the components of the lists. the endvalues are shifted
+{
+    lli a = *low.rbegin();
+    if(a<val){
+        up.insert(val); sup += val;
+        if(up.size()  >k/2){
+            lli moving  =*up.begin();
+            low.insert(moving); slow+= moving;
+            up.erase(up.find(moving)); sup -= moving;
+        }
+    }
+    else{
+        low.insert(val); slow+=val;
+        if(low.size() > (k+1)/2){
+            lli moving = *low.rbegin();
+            up.insert(*low.rbegin()); sup+= moving;
+            low.erase(low.find(*low.rbegin())); slow -= moving;
+        }
+    }
+}
+void er (lli val)
+{
+    if(up.find(val)!= up.end()) up.erase(up.find(val)), sup -= val;
+    else low.erase(low.find(val)), slow -= val;
+    if(low.empty()){
+        lli moving = *up.begin();
+        low.insert(*up.begin()); slow += moving;
+        up.erase(up.find(*up.begin())); sup-= moving;
+    }
+}
+lli med(){
+    return (k%2 ==0? 0 : *low.rbegin());
+}
+int main()
+{
+    cin>>n>>k;
+    lp(i,n)cin>>arr[i]; ///add array
+    low.insert(arr[0]); slow+=arr[0]; 
+    for(int i = 1;  i<k; i++) add(arr[i]); 
+    cout<<sup- slow  + med(); if(n!= 1) cout<< " " ;  
+    for(int  i = k; i < n; i++){
+        if(k==1){
+            add(arr[i]);
+            er(arr[i-k]);
+        }
+        else{
+            er(arr[i-k]);
+            add(arr[i]);
+        }
+        cout<<sup - slow  +med(); if(i!= n-1) cout<< " ";
+    }
+    cout<<endl;
+}
