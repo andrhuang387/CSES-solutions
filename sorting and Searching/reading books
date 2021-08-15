@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    sort by size
+    one read smaller and antoher read larger
+    since time is same, if first didnt reach last book by time second person is done, then the answer is the just the sum of the time of the books
+    only bottleneck is when the firs finishes all the books and has to wait for the second to finish
+*/
+int main() {
+    lli n;
+    cin>>n;
+    vector<lli> a;
+    lp(i,n){
+        lli x;
+        cin>>x;
+        a.pb(x);
+    }
+    sort(a.begin(), a.end());
+    lli sum = 0;
+    for(int i =0 ; i < n-1; i++){
+        sum+=a[i];
+    }
+    if(sum < a[n-1]) sum+= a[n-1]  - sum;
+    sum+=a[n-1];
+    cout<<sum<<endl;
+
+}
