@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    binary search for the answer with possible times
+*/
+lli n, t;
+vector<lli> machine;
+bool works(lli time){
+    lli amount = 0;
+    for(auto it: machine){
+        amount += time/it;
+    }
+    return amount >= t;
+}
+int main() {
+    cin>>n>>t;
+    lp(i, n){
+        lli x;
+        cin>>x;
+        machine.pb(x);
+    }
+    lli pos = 0;
+    for(lli x = 100000000000; x>=1; x/=2){
+        while(!works(pos + x))pos+=x;
+    }
+    cout<<pos+1;
+
+}
