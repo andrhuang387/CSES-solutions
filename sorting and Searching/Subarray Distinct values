@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    have a map of values and the number of occurence
+    have a left pointer
+    if the size of map larger than k, move left pointer and remove values unti lthe size of the map is less than k. Then add range of all subarrays in the map
+*/
+int main() {
+    lli n, k;
+    cin>>n>>k;
+    vector<lli> a(n);
+    map<lli, lli> nums;
+    lli left  = 0;
+    lli ans = 0;
+    lli ndif = 0;
+    lp(i,n){
+        cin>>a[i];
+        if(nums[a[i]]==0) ndif++;
+        nums[a[i]]++;
+        if(ndif > k){
+            for(; ndif>k; left++){
+                nums[a[left]]--;
+                if(nums[a[left]] ==0 )ndif--;
+            }
+        }
+        ans += i-left+1;
+    }
+    cout<<ans<<endl;
+}
