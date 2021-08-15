@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+/*
+   continue adding. Everytime you see a repeated value you delete all values in the list to the repeated value by storing a "starting index"
+   note that this works in O(2n) time because it either deletes a value or inserts a value 
+*/
+int main() {
+    int n;
+    cin>>n;
+    vector<lli> a(n);
+    for(auto &it: a)cin>>it;
+    set<int> seen;
+    int cur = 0, ans = 0;
+    int start = 0;
+    lp(i, n){
+       if(seen.find(a[i]) == seen.end())cur++;
+       else{
+          ans = max(ans, cur);
+          cur++;
+          int j = start;
+          while(a[j] != a[i]){
+            seen.erase(seen.find(a[j]));
+            cur--;
+            j++;
+          }
+          j++;
+          cur--;
+          start = j;
+       }
+       seen.insert(a[i]);
+    }
+    ans = max(ans, cur);
+    cout<<ans<<endl;
+}
