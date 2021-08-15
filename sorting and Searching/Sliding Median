@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    add in all values
+    have a multiset to find the middle value
+    have a queue to know what to remove. (note: you dont actually need this you can just do a[i - size of window-1])
+    add first values to the queue and get median pointer to that location
+    then loop at all values and print median (with another at the end)
+    remove and keep track of last element
+    case 1: if remove value is median and new value is also median ,stay same
+    case 2: if new value larger or equal to median and remove value less than median or equal to median, shift median up
+    case 3: if new value less than median and remove value larger  or equal to median,shift median down
+    case 4: if remove value is equal to median and new value is larger than median, shift median up
+    remove and add
+
+*/
+lli n, k;
+#define MAXN 200000
+int main() {
+    cin>>n>>k;
+    lli a[MAXN];
+    lp(i,n)cin>>a[i];
+    multiset<lli> arr;
+    queue<int>q;
+    lp(i, k){
+        arr.insert(a[i]);
+        q.push(a[i]);
+    }
+    auto median = arr.begin();
+    lp(i, (k-1)/2){
+        median++;
+    }
+    for(int i = k ; i<n; i++){
+        cout<<*median<< "  ";
+        lli remove = q.front();
+        q.pop();
+        arr.insert(a[i]);
+        if(remove == *median && a[i] == *median){
+            q.push(a[i]);
+            continue;
+        }
+        else if (a[i] >= *median && remove <= *median) median++;
+        else if(a[i] < *median && remove  >= *median) median--;
+        auto found = arr.find(remove);
+        arr.erase(found);
+        q.push(a[i]);
+    }
+    cout<<*median<<endl;
+}
