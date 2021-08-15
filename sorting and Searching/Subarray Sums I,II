@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    get prefix sums 
+    at each position ans + number of prefix sums that equal total -x since if we just dont include that region, then it equals x
+    dont forget to add prefix sum of zero
+*/
+int main() {
+    lli n, x;
+    cin>>n>>x;
+    vector<lli> a;
+    lp(i,n){
+        lli x;cin>>x;a.pb(x);
+    }
+    map<lli,lli> psum;
+    psum[0]++;
+    lli total = 0;
+    lli ans  = 0;
+    for(auto it: a){
+        total += it;
+        ans += psum[total - x];
+        psum[total]++;
+    }
+    cout<<ans<<endl;
+}
