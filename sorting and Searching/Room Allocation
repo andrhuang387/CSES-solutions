@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+//#define sort(a) sort(a.begin(), a.end())
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+
+typedef tree<pair<int, int>,null_type,less<pair<int, int>>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+   get start and end times
+   sort so that you prioritze entering than exiting
+   have a set of available rooms
+*/
+bool cmp(pair<int,int> a, pair<int,int>b){
+   return a.f == b.f? a.s > b.s: a.f < b.f;
+}
+int main() {
+    int n;
+    cin>>n;
+    vector<pair<int,int>> times;
+    set<int> rooms;
+    for(int i = 1; i<=n; i++){
+        int start, end;
+        cin>>start>>end;
+        times.pb({start, i});
+        times.pb({end, -i});
+        rooms.insert(i);
+    }
+    sort(times.begin(), times.end(), cmp);
+    vector<int> ans(n+1);
+    int most = 0;
+    for(auto it: times){
+        if(it.s <0)rooms.insert(ans[-it.s]);
+        if(it.s > 0) {
+            ans[it.s] = *rooms.begin();
+            most = max(most, ans[it.s]);
+            rooms.erase(rooms.begin());
+        }
+    }
+    cout<<most<<endl;
+    for(int i = 1; i<=n; i++)cout<<ans[i]<< "  ";
+
+}
