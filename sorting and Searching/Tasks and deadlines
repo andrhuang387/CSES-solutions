@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    best to do smallest first.
+    i.e 1000000 1 1 1 1 1 1 . the sum of times is the same, so you want to cutoffs to be congregated at the front instead of in the back
+*/
+int main() {
+    int n;
+    cin>>n;
+    vector<pair<int,int>> a;
+    lp(i, n){
+        int duration, deadline;
+        cin>>duration>>deadline;
+        a.pb({duration, deadline});
+    }
+    sort(a.begin() ,a.end());
+    lli ans = 0;
+    lli t = 0;
+    lp(i, n){
+        t+= a[i].f;
+        ans+=a[i].s - t;
+    }
+    cout<<ans<<endl;
+}
