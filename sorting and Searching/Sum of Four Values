@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 101
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+typedef vector<pair<int,int>> vpii;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+//#define mod 1000000007
+int lef = 0; int middle= 0;
+int far = 0;
+ int righ = 0;
+int x;
+vpii a(MAXN);
+/*
+   similar to the 3sum ,you just get first value, then second value, and test whether the 2 remaining values can equal a sum
+*/
+bool works(int righ, int sum)
+{
+  middle = righ-1;
+  lef = 0;
+  while( middle != lef){
+    if(a[middle].f + a[lef].f >sum ){
+      middle--;
+    }
+    else if(a[middle].f + a[lef].f < sum)lef++;
+    else if(a[middle].f + a[lef].f==sum)return true;
+  }
+  return false;
+}
+bool good(int far, int sum)
+{
+  righ = far -1;
+  while(righ > 1){
+    if(works(righ, sum - a[righ].f))return true;
+    righ--;
+  }
+  return false;
+}
+int main()
+{
+    int n;
+    cin>>n>>x;
+    a.resize(n);
+    lp(i, n){
+       cin>>a[i].f;
+       a[i].s = i+1;
+    }
+    sort(a.begin(), a.end());
+    int far = n-1;
+    while(far > 2){
+      if(good(far, x - a[far].f)){
+        cout<<a[lef].s<< "  "<<a[middle].s<< " "<<a[righ].s<< " "<<a[far].s;
+        return 0;
+      }
+      far--;
+    }
+    cout<<"IMPOSSIBLE";
+}
