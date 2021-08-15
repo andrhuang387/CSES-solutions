@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+    like the first one, the idea is to greedily watch videos with earliest end times
+    have a multiset of watchers. If a person is able to watch, then let him watch
+    if not, check if adding person is under the group size and make another person watch a movie
+
+
+*/
+#define MAXN 200000
+int n ,k;
+array<lli,2> a[MAXN];
+int main()
+{
+    faster();
+    cin>>n>>k;
+    vector<pair<int,int>> times;
+    for(int i = 0;i<n;i++){
+        lli begin, end;
+        cin>>begin>>end;
+        times.push_back(make_pair(end,begin));
+    }
+    sort(times.begin(), times.end());
+    int ans = 0;
+        multiset<int> people;
+    for(int i  =0;i<n;i++){
+        bool WatchAgain  =false;
+        auto it = people.upper_bound(times[i].second);
+        if(it!= people.begin()){
+            --it;
+            if(*it<=times[i].second){
+                people.erase(it);
+                people.insert(times[i].first);
+                WatchAgain = true;
+                ans++;
+            }
+        }
+        if(people.size()<k && WatchAgain==false){
+            people.insert(times[i].first);
+            ans++;
+        }
+    }
+    cout<<ans<<endl;
+
+}
