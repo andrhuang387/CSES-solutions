@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define pb push_back
+#define s second
+#define f first
+#define lli long long int
+void faster()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+/*
+   initially have a long sting. After each cut up and erase the previous. then get the largest from the set. Also have some extra cases to speed up such as only seeing distinct
+*/
+int main() {
+    faster();
+    int x, n;
+    cin>>x>>n;
+    set<int> a;
+    a.insert(0); a.insert(x);
+    multiset<int> lengths;
+    lengths.insert(x); ///initially length of x
+    set<int> seen;
+    lp(i,n){
+        int x;
+        cin>>x;
+        if(seen.find(x) != seen.end())continue;
+        auto higher = a.upper_bound(x);
+        auto lower = higher; lower--;
+        lengths.erase(lengths.find(*higher - *lower));
+        if(*higher - x != 0)lengths.insert(*higher - x);
+        if (x - *lower != 0)lengths.insert(x - *lower);
+        a.insert(x);
+        printf("%d ", *lengths.rbegin());
+    }
+    return 0;
+}
