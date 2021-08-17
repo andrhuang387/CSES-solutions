@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define mod 1000000007
+/*
+    essentially the same as the dice combination except you are inputting the dice
+*/
+int main() {
+    int n, k;
+    cin>>n>>k;
+    vector<int> coin(n);
+    for(auto & it: coin)cin>>it;
+    vector<int> dp (k+1, 0);
+    dp[0] = 1;
+    for(int i = 1; i<=k; i++){
+        for(auto it: coin)if(i  - it >=0)dp[i] = (dp[i-it]  +dp[i]) %mod;
+    }
+    cout<<dp[k];
+}
