@@ -1,42 +1,38 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-#define f first
+#define MAXN 200001
 #define s second
-#define pb push_back
-#define MAXN 100000001
+#define f first
 #define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
 #define mod 1000000007
-lli best[10000001];
-lli has[10000001];
-lli n, x;
-int find(int x)
+/*
+    get all values of number and then do a normal dp on it 
+*/
+int n;
+vector<int> dp;
+int minimal(int num)
 {
-    if(x<0) return MAXN;
-    if(x==0) return 0;
-    if(has[x]) return best[x];
-    int temp = x;
-    vector<int> digits;
-    while(temp>=1){
-        if(temp%10 == 0){
-            temp/=10;
-            continue;
-        }
-        digits.push_back(temp%10);
-        temp/=10;
+    if (num<0)return MAXN;
+    if(dp[num] != INF) return dp[num];
+    stringstream ss;
+    ss<<num;
+    string str = ss.str();
+    for(auto digitchar: str){
+        //cout<<"test"<<digitchar<<endl;
+        int digit = digitchar -'0';
+        if(digit ==0)continue;
+        dp[num] = min(dp[num], minimal(num - digit)+1);
     }
-    int least = MAXN;
-
-    for(auto d: digits){
-        least = min(least, find(x-d)+1);
-    }
-    best[x] = least;
-    has[x] = true;
-    return least;
-
-
+    return dp[num];
 }
-int main()
-{
-   cin>>n;
-   cout<<find(n);
+int main() {
+    int n;
+    cin>>n;
+    dp.resize(n+1, INF);
+    dp[0] = 0;
+    cout<<minimal(n);
 }
