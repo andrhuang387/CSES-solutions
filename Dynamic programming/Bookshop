@@ -1,37 +1,32 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-#define f first
+#define MXN 200001
 #define s second
-#define pb push_back
-#define MAXN 100000001
+#define f first
 #define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
 #define mod 1000000007
-lli sum[1001][1001];
-lli has[10000001];
-int h[1001];
-int s[1001];
-lli n, x;
-int main()
-{
-   cin>>n>>x; ///books, then budget
-   vector<int>prices(n), pages(n);
-   for(int &i: prices){
-    cin>>i;
-   }
-   for(int &i: pages){
-    cin>>i;
-   }
-   vector<vector<int>>dp(n+1, vector<int>(x+1, 0));
-   for(int i = 1; i<=n; i++){
-    for(int j = 0;j<=x; j++){
-        dp[i][j] = dp[i-1][j]; /// i means books, j means money
-        int left = j - prices[i-1];
-        if(left>=0){
-            dp[i][j] = max(dp[i][j], dp[i-1][left] + pages[i-1]);
+/*
+    since knapsack has variable size, you want to test all the possible money left and books buying for the dp. 
+    i.e what is the maximum number of pages you can read given n books and c dollars
+    the transitino is : max( dp[i-1][j] a.k.a not buying that specific book, dp[i-1][j-cost book]  +pages book a.k.a buying book)
+    specifically,this is a 1-0 knapsack problem
+*/
+int main() {
+    int n, x;
+    cin>>n>>x;
+    vector<int> cost(n), page(n);
+    for( auto &it: cost)cin>>it;
+    for(auto &it: page) cin>>it;
+    vector<vector<int>> dp(n+1, vector<int>  (x+1, 0));
+    for(int i = 1 ; i <=n; i++){ ///books, and dollars
+        for(int j = 1; j<=x; j++){
+            dp[i][j] = dp[i-1][j];
+            if(j - cost[i-1]>=0) dp[i][j] = max(dp[i][j], dp[i -1][j - cost[i-1]] + page[i-1]);
         }
     }
-   }
-   cout<<dp[n][x];
-
-
+    cout<<dp[n][x];
 }
