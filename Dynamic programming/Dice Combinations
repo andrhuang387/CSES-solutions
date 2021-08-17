@@ -1,26 +1,27 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-#define f first
+#define MAXN 200001
 #define s second
-#define pb push_back
-#define MAXN 100000001
+#define f first
 #define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
 #define mod 1000000007
-vector<int> dice = {1,2,3,4,5,6};
-lli n;
-lli num[1000001];
-int main()
-{
-    num[0] = 1;
+/*
+     iteratively test x values and see all the possible die rolls that can create that x value
+*/
+int main() {
+    int n;
     cin>>n;
-    for(int x  = 1; x<=n;x++){
-        for(auto d:dice){
-            if(x - d >=0){
-                num[x]+= num[x-d];
-                num[x] %=123456123456mod;
-            }
-        }
-        num[x] %=mod;
+    vector<int> die;
+    lp(i, 6)die.pb(i+1);
+    vector<int> dp (n+1, 0);
+    dp[0] = 1;
+    for(int i = 1; i<=n; i++){
+        for(auto it: die)if(i  - it >=0)dp[i] = (dp[i-it]  +dp[i]) %mod;
     }
-    cout<<num[n]%mod;
+    cout<<dp[n];
 }
+
