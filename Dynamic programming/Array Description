@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define mod 1000000007
+/*
+    use dp on the cases of zero and 1
+    case 1: nonzero, find the -1, +1, and none. also, take note that if +1 gets out of bounds, return 0
+    case 2: zero: take note that the value can be any possible value. So test all the a value ranges from 0 - upper bound
+    if at any time, the value is equal to the n-1, print the total 
+*/
+int main() {
+    int n, m;
+    cin>>n>>m;
+    vector<int> a;
+    lp(i, n){
+        int x;
+        cin>>x;
+        a.pb(x);
+    }
+    vector<vector<int>> dp(n+1, vector<int> (m+1, 0));
+    if(a[0] !=0) {
+        dp[0][a[0]] = 1;
+        if(0 == n-1)cout<<dp[0][a[0]]<<endl;
+    }
+    else {
+        int ans = 0;
+        for(int i = 1; i<=m; i++) {
+            dp[0][i] = 1;
+            if(0 == n-1)ans = (ans + dp[0][i])%mod;
+        }
+        if(0==n-1)cout<<ans<<endl;
+    }
+    for(int i = 1; i<n; i++){
+        if(a[i]!= 0){
+            int val = a[i];
+            dp[i][val] = ((dp[i-1][val] + (val+1>m?0:dp[i-1][val+1]))%mod + dp[i-1][val-1])%mod;
+            if(i == n-1)cout<<dp[i][val]<<endl;;
+        }
+        else{
+            int ans = 0;
+            for(int j = 1; j  <= m; j++){
+                dp[i][j] = ((dp[i-1][j] + (j+1>m?0:dp[i-1][j+1]))%mod + dp[i-1][j-1])%mod;
+                if(i == n-1) ans = (ans  + dp[i][j]) %mod;
+            }
+            if(i == n-1)cout<<ans<<endl;
+        }
+    }
+}
