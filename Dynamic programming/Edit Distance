@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define mod 1000000007
+/*
+    there are three transition states
+    1. Remove one character from the a string
+    2. remove one character from the b string
+    3. remove both caracters from both strings. this cost can either be 1 or zero
+*/
+int main() {
+    string a;
+    string b;
+    cin>>a>>b;
+    vector<vector<int>> dp (a.length()+1, vector<int>  (b.length()+1, INF));
+    dp[0][0] = 0;
+    for(int i = 1; i<= a.length(); i++) dp[i][0] = dp[i-1][0]+1;
+    for(int j = 1; j<=b.length(); j++) dp[0][j] = dp[0][j-1] +1;
+    for(int i = 1; i  <=a.length(); i++){
+        for(int j = 1; j <=b.length(); j++){
+            int down = dp[i-1][j]+1;
+            int left = dp[i][j-1]+1;
+            int cost  = (a[i-1] == b[j-1]? 0:1);
+            int diag = dp[i-1][j-1]  + cost;
+            dp[i][j] = min(dp[i][j], min(diag, min(left, down)));
+        }
+    }
+    cout<<dp[a.length()][b.length()];
+}
