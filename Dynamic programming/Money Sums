@@ -1,14 +1,23 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-#define f first
+#define MXN 200001
 #define s second
-#define pb push_back
-#define MAXN 100000001
+#define f first
 #define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
 #define mod 1000000007
-lli n;
+/*
+    since n is small and x is also small, the maximum sum is around 10^5
+    therefore we can make a dp of the coins available and if it is possible to make a sum of x with the coins
+    if the previous element is possible with i-1 coins, then change the current position with i coins to be true
+    print everytime a value is true
+*/
 int main()
 {
+   int n;
    cin>>n;
    int max_sum  = n*1000;
    vector<int> coins;
@@ -26,17 +35,11 @@ int main()
         if(remain>=0 && dp[i-1][remain]){
             dp[i][j] = true;
         }
-
     }
    }
    vector<int> ans;
-   for(int j = 1; j<=max_sum;j++){
-    if(dp[n][j])ans.push_back(j);
-   }
-   cout<<ans.size();
-   for(auto it: ans){
-    cout<<it<<endl;
-   }
-
-
+   for(int j = 1; j<=max_sum;j++)if(dp[n][j])ans.push_back(j);
+   cout<<ans.size()<<endl;
+   for(auto it: ans)cout<<it<<endl;
 }
+
