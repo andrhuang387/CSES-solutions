@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 5001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
+#define mod 1000000007
+/*
+    get a prefix sum of the sizes
+    make a dp for the best a person can get with first pick on a range
+    after each pick, you add the sum of the remaining prefix sum minus the dp of the prefix sum
+    you then get the max of the two
+    also, remember to set the starting values right. I forgot that there was a negative value possibility and didnt put the range right. It is always better to be safe than sorry
+*/
+int main()
+{
+   int n;
+   cin>>n;
+   lli a[MAXN], psum[MAXN];
+   psum[0] = 0;
+   for(int i  =1; i<= n; i++) {
+        cin>>a[i];
+        psum[i] = psum[i-1]+  a[i];
+   }
+   vector<vector<lli>> dp(n+1, vector<lli> (n+1, -100000000000));
+   for(int i  =1; i <= n ; i ++) dp[i][i] = a[i];
+   for(int i = n-1; i>=1; i--){
+    for(int j = i+1; j<=n;j++){
+        lli left = a[i] + psum[j] - psum[i] - dp[i+1][j];
+        lli right =a[j] + psum[j-1] - psum[i-1] - dp[i][j-1];
+        dp[i][j] = max(dp[i][j], max(left, right));
+    }
+   }
+   cout<<dp[1][n];
+}
