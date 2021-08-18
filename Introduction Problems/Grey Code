@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define mod 1000000007
+/*
+    
+*/
+int main()
+{
+    int n;
+    cin>>n;
+    for (int i = 0; i < (1 << n); i++)
+    {
+        // Generating the decimal
+        // values of gray code then using
+        // bitset to convert them to binary form
+        int val = (i ^ (i >> 1));
+        bitset<32> r(val);
+        string s = r.to_string();
+        cout << s.substr(32 - n) <<endl;
+    }
+}
