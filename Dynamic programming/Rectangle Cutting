@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
+#define mod 1000000007
+/*
+    loop through all possible cuts and test if one of them could create two or one smaller rectangles
+    then check the minimum number of cuts in the small subrectangle and add it to the possible working sum
+    the result is just the minimum working sum
+*/
+int main()
+{
+    int a,b;
+    cin>>a>>b;
+    vector<vector<int>> dp (a+1, vector<int> (b+1, INF));
+    ///make all squares zero moves
+    for(int j =0; j<=min(a,b); j++){
+            dp[j][j] = 0;
+    }
+    ///make all "rectangles with length zero" have move of zero
+    for(int j = 0; j<=a;j++) dp[j][0] = 0;
+    for(int j = 0; j <=b; j++) dp[0][j] = 0;
+    ///loop through all possible grid sizes
+    for(int i = 1; i<=a; i++){
+        for(int j = 1; j<= b; j++){
+            int small = min(i,j);
+            ///for all squares less than minimum, it is a cost of two cuts
+            ///there are two subcases 1. long  _ and short | , or two, short _ and long|
+            for(int size = 1; size<small;size++){ 
+                dp[i][j] = min(dp[i][j],min( 2 + dp[i][j - size] + dp[i-size][size], 2 + dp[i-size][j] + dp[size][j-size]));
+            }
+            //when size is one of the borders, the cut cost is 1 plus the other rectangle
+            if(small == i)dp[i][j] = min(dp[i][j], 1 + dp[i][j - small]);
+            if(small == j)dp[i][j] = min(dp[i][j], 1 + dp[i-small][j]);
+        }
+    }
+    cout<<dp[a][b];
+}
