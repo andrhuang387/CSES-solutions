@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 2000000000
+#define mod 1000000007
+/*
+    make a dp of dimension 2. dimension 1 is the height and dimension 2 is if that row is composed of a "vertical divider" or not
+    the next transition is composed of 4 different possibilities
+    a. next is two merged blocks
+         i. previous is also a merged block. There are 2 possibilities because horizontal dividers can be included or not
+         2. previous is an unmerged block
+    b. next is two blocks
+          i. pervious is also a divided block. There are 2^2 cases for the horizontal dividers. Either on or off for left and right
+          ii. previous is a merged block. 
+*/
+int main() {
+    vector<vector<lli>> dp(1000001, vector<lli> (2, 0));
+    dp[1][0] = 1;
+    dp[1][1] = 1;
+    for(int i = 1; i<1000000; i++){
+        dp[i][0]%= mod;
+        dp[i][1] %= mod;
+        dp[i+1][0] += 2*dp[i][0];
+        dp[i+1][1] += dp[i][0];
+        dp[i+1][0] += dp[i][1];
+        dp[i+1][1] += 4*dp[i][1];
+    }
+    int tc;
+    cin>>tc;
+    while(tc--){
+        int n;
+        cin>>n;
+        cout<<(dp[n][0]  +dp[n][1])%mod<<endl;
+    }
+}
