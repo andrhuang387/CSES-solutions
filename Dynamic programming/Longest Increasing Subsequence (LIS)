@@ -1,33 +1,32 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-#define f first
+#define MAXN 5001
 #define s second
-#define pb push_back
-#define MAXN 100000001
+#define f first
 #define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
 #define mod 1000000007
-lli n;
-vector<int> dp;
+/*
+    add to a multiset. at each, get the lower bound to the value
+    we do this because we want to minimize each step. i.e if you do that then there will be at least one sequence that works (at least one element will be less than one element in another ...)
+*/
 int main()
 {
+   int n;
    cin>>n;
-   vector<int> a(n);
-   //for(auto &it: a){
-    // cin>>it;
-   //}
-
-   for(int i = 0; i<n;i++){
-        int x;
-   cin>>x;
-    //vector<int>
-    auto it = lower_bound(dp.begin(), dp.end(), x);
-    if(it == dp.end()){
-        dp.push_back(x);
-    }
+   multiset<int> s;
+   while(n--){
+    int x;
+    cin>>x;
+    auto it = s.lower_bound(x);
+    if(it == s.end()) s.insert(x);
     else{
-        *it = x;
+        s.erase(it);
+        s.insert(x);
     }
    }
-   cout<<dp.size();
-
+   cout<<s.size();
 }
