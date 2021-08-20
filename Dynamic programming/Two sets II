@@ -1,37 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define lli long long int
-#define f first
+#define MAXN 5001
 #define s second
+#define f first
+#define lli long long int
 #define pb push_back
-#define MAXN 21
-#define MAXVAL 1000000001
-#define INF 2000000000
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
 #define mod 1000000007
-#define loop(i, a,b) for  (int i=(a); i<= (signed)(b); i++)
-#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-#define ordered_set tree<int, null_type,less<int>, rb_tree_tag,tree_order_statistics_node_update>=
-int main() {
-    int n;
-    cin>>n;
-    int target = n*(n+1)/2;
-    if(target%2){
-        cout<<0<<endl;
-        return false;
-    }
-    target/=2;
-    vector<vector<int>> dp(n, vector<int> (target+1, 0));
-    dp[0][0] =1;
-    for(int i = 1; i<n; i++){
-        for(int j = 0  ;j<=target; j++){
+/*
+    first test if the sum is odd. If the sum is odd, then it is impossible to create two sets of the same value ( parity + same parity  = even)
+    make a dp of [largest_value_used][set_sum]
+    for each new i value, the base is the reaching the set sum without that element
+    the new transition is adding that value to a set before adding it which reaches current j target
+*/
+int main()
+{
+   int n;
+   cin>>n;
+   int sum = n *(n+1)/2;
+   if(sum&1) {
+    cout<<0<<endl;
+    return 0;
+   }
+   int target = sum/2;
+   vector<vector<int>> dp(n+1, vector<int> (target+1, 0));
+   dp[0][0] =1;
+   for(int i = 1; i<=n; i++){
+      for(int j = 1; j<= target; j++){
             dp[i][j] = dp[i-1][j];
-            int left = j - i;
-            if(left>=0) dp[i][j] += dp[i-1][left]%mod;
-            dp[i][j]%=mod;
-        }
-    }
-    cout<<dp[n-1][target]<<endl;
+            int remain = j - i;
+            if(remain>=0) dp[i][j]  = (dp[i][j] + dp[i-1][remain])%mod;
+      }
+   }
+   cout<<dp[n][target]<<endl;
 }
