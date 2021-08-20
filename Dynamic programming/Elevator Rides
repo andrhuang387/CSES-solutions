@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define f first
+#define ss second
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
+#define mod 1000000007
+/*
+    we want to minimize number of rides and weight of last ride
+    dp transition is just optimally choose last person onto ride (you can see when applied long enough, gives full list of values)
+    therefore, loop through all bitmask possibilities. With each mask, test all bits and the current is just a bitmask without a specific bit. 
+    Then check the cost of adding that bit (add to last or make new ride)
+    if new ride, then add
+    then compare to the current minimum for that mask and take minimum
+    finally, answer is just the dp of the full mask
+*/
+int main()
+{
+   int n, x;
+   cin>>n>>x;
+   vector<int> a(n);
+   for(auto &it: a)cin>>it;
+   pair<int,int> best[1<<n];
+   best[0] = {1, 0};
+
+   int ans = 100000;
+   for(int s = 1; s <(1<<n); s++){
+     best[s] = {1+n, 0};
+     lp(p,n){
+        if(s&(1<<p)){
+            auto option = best[s^(1<<p)];
+            
+            if(option.ss + a[p] > x){
+                option.f++;
+                option.ss = a[p];
+            }
+            else{
+                option.ss += a[p];
+            }
+            best[s] = min(best[s], option);
+        }
+     }
+   }
+   cout<<best[(1<<n)-1].f<<endl;
+
+}
