@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
+#define mod 1000000007
+/*
+    to test all the possible, we can look at the specific states per column. i.e create different masks for each state, which will dictate the other states, and then look them up as we increase
+*/
+int dp[1001][(1<<11)];
+void generate_next_mask(int current_mask, int i, int next_mask, int n, vector<int>& next_masks)
+{
+    ///once out of range, store that mask into the vector of masks
+    if(i == n+1){
+        next_masks.pb(next_mask);
+        return;
+    }
+    ///when a location is occupied, continue and leave that row in next column blank
+    if((current_mask & (1<<i)) !=0)generate_next_mask(current_mask, i+1, next_mask, n, next_masks);
+    //if two adjacent are unoccupied, continue and make one two away 
+    if(i!=n) if((current_mask & (1<<i)) ==0 && (current_mask & (1<<(i+1)))==0) generate_next_mask(current_mask, i+2, next_mask, n, next_masks);
+    ///if unoccipied, place a 1x2 domino there and therefore the next mask should be a occupied at that row
+    if((current_mask & (1<<i)) ==0)generate_next_mask(current_mask, i+1, next_mask + (1<<i), n, next_masks);
+}
+int solve(int col, int mask, const int m, const int n)
+{
+    //if column is outside bounds, if the mask is zero then it is good (since we dont want any hanging out)
+    if(col == m+1){
+        if(mask ==0)return 1;
+        return 0;
+    }
+    if(dp[col][mask] != -1) return dp[col][mask];
+    vector<int> next_masks;
+    int ans = 0;
+    ///create masks for the next column
+    generate_next_mask(mask, 1, 0, n, next_masks);
+    ///sum it up
+    for(auto next_mask: next_masks) ans = (ans + solve(col+1, next_mask, m, n))%mod;
+    return dp[col][mask] = ans;
+}
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    memset(dp, -1, sizeof(dp));
+    cout<<solve(1, 0, m, n);
+
+}
