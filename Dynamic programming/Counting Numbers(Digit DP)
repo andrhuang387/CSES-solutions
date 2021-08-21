@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define MXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+typedef vector<lli> vi;
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define INF 200000000
+#define mod 1000000007
+/*
+    two  options:
+       1. go from most significant digit -1 and 8^n
+       2. use most significant digit and then the two options for that
+*/
+lli dp[101][11][2][2]; ///add leading
+void reset()
+{
+    memset(dp, -1, sizeof dp);
+}
+lli solve(string& num, int n, int prev, bool leadzero, bool tight)
+{
+    if(n==0)return 1;  ///when zero digits left, add one since all the good cases have made it past to this point
+    if(dp[n][prev][leadzero][tight]!=-1)return dp[n][prev][leadzero][tight];
+    lli ans = 0;
+    int ub = tight? (num[(num.length() - n)] - '0'):9;
+    for(int dig = 0; dig<=ub;dig++){
+        if(dig == prev && !leadzero)continue; ///dont want repeats. But if there are repeats and the leadingzero is true, let it slide since all in front are zeros
+        ans += solve(num, n-1, num[(num.length() - n)] - '0',(leadzero &(dig==0)), (tight &(dig==ub)));
+    }
+    return dp[n][prev][leadzero][tight]  =ans;
+}
+int main()
+{
+    reset();
+    string b,a;
+    lli ta;
+    cin>>ta>>b;ta--;
+    a = to_string(ta);
+    lli up = solve(b, b.length(), -1 ,1, 1 );
+    reset();
+    cout<<up - solve(a, a.length(), -1, 1, 1);
+}
