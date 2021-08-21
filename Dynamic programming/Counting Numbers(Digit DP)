@@ -39,6 +39,6 @@ int main()
     cin>>ta>>b;ta--;
     a = to_string(ta);
     lli up = solve(b, b.length(), -1 ,1, 1 );
-    reset();
+    reset();  ///want to reset since previous digit table would mess the next one up
     cout<<up - solve(a, a.length(), -1, 1, 1);
 }
