@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define loop(i,n) for(int i = 1; i<=n; i++)
+#define INF 100000000
+#define mod  10000
+///
+/*
+   build adjacency list
+   store initial coordinate of each and connect to next
+*/
+int n, m;
+map<int,int>pointer;
+vector<int>ans;
+int main()
+{
+   cin>>n>>m;
+   vector<bool> vis(n+1, false);
+   map<int, vector<int>> adj;
+   lp(i,m){
+    int a,b;
+    cin>>a>>b;
+    adj[a].pb(b);
+    adj[b].pb(a);
+   }
+   //bfs(1,vis, adj);
+   queue<int> q;
+   q.push(1);
+   pointer[1] = -1;
+   vis[1] = true;
+   while(!q.empty()){
+    int v = q.front();
+    q.pop();
+    //vis[v] = true;   ///this thing messed me up
+    if(v == n){
+        ans.pb(n);
+        while(ans.back () != 1) ans.pb(pointer[ans.back()]);
+        reverse(ans.begin(), ans.end());
+        cout<<ans.size()<<endl;
+        for(auto it: ans)cout<<it<< " ";
+        return 0;
+    }
+    for(auto it: adj[v]){
+        if(!vis[it]){
+            q.push(it);
+            vis[it] = true;
+            pointer[it] = v;
+        }
+    }
+
+   }
+
+   cout<<"IMPOSSIBLE"<<endl;
+
+}
