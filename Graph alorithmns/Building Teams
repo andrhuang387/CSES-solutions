@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define loop(i,n) for(int i = 1; i<=n; i++)
+#define INF 100000000
+#define mod  10000
+///
+/*
+   for each component, make alternation.
+   i.e all friends of 1 are on the other team
+   because of components, its fine if all of first person of each component is 1
+   if come to case where vis[it] == vis[self] , then it is impossible
+   do (counter + 2)%2 + counter because that way it will alternate between 1 and 2
+*/
+int n, m;
+int counter = 1;
+map<int, vector<int>> adj;
+void dfs(int v, vector<int> &vis, int counter)
+{
+    vis[v] = counter;
+    for(auto it: adj[v]){
+        if(vis[it] == -1) dfs(it, vis, (counter+2)%2 +1);
+        else if(vis[it] == vis[v]){
+            cout<<"IMPOSSIBLE"<<endl;
+            exit(0);
+        }
+    }
+}
+int main()
+{
+   cin>>n>>m;
+   vector<int> vis(n+1, -1);
+   lp(i,m){
+    int a,b;
+    cin>>a>>b;
+    adj[a].pb(b);
+    adj[b].pb(a);
+   }
+   int counter = 1;
+   loop(i, n){
+       if(vis[i] == -1)dfs(i, vis, counter);
+   }
+   loop(i,n)cout<<vis[i]<<" ";
+
+}
