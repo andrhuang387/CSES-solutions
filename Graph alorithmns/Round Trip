@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define loop(i,n) for(int i = 1; i<=n; i++)
+#define INF 100000000
+#define mod  10000
+///
+/*
+   1. make adjacency matrix
+   2. test new components
+       i. for each component, use a dfs. mark each node as value since last visited. keep track of length
+       ii. if there is a node that has been visited twice, do length - last visited to remove "tail" that isnt part of cycle
+       iii. get print that value, store start/end value in global var, return true so that its parent can be printed. 
+       iv. if current node is repeated value, print value and exit function. otherwise print IMPOSSIBLE
+*/
+map<int, vector<int>>adj;
+int ending;
+int n, m;
+bool dfs(int v, vector<int> & vis, int length, int parent)
+{
+    for (auto it: adj[v]){
+        if(vis[it] == -1){
+            vis[it] = length;
+            bool print = dfs(it, vis, length+1, v);
+            if(print){
+                cout<<it<<" ";
+                if(v== ending){
+                    cout<<v<<endl;
+                    exit(0);
+                }
+                return true;
+            }
+        }
+        else if(vis[it] != -1 && length - vis[it] >=3){
+            cout<<length - vis[it]+1<<endl;
+            ending = it;
+            cout<<it<<" ";
+            return true;
+        }
+        else if(vis[it] != -1)continue; /// dont want to go here because it repeats
+    }
+    return false;
+}
+int main()
+{
+   cin>>n>>m;
+   vector<int> vis(n+1, -1);
+   lp(i,m){
+    int a,b;
+    cin>>a>>b;
+    adj[a].pb(b);
+    adj[b].pb(a);
+   }
+   loop(i, n){
+    if(vis[i] == -1){
+        vis[i] = 0;
+        dfs(i, vis, 1, -1);
+    }
+   }
+   cout<<"IMPOSSIBLE"<<endl;
+}
