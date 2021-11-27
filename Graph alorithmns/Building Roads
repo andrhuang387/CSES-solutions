@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define lp(i, n)    for(int i = 0; i<n; i++)
+#define loop(i,n) for(int i = 1; i<=n; i++)
+#define INF 100000000
+#define mod  10000
+///
+/*
+   build adjacency list
+   store initial coordinate of each and connect to next
+*/
+void dfs(int i,vector<bool> & vis, map<int, vector<int>> &adj )
+{
+    vis[i] = true;
+    for(auto it: adj[i]){
+        if(!vis[it]){
+            dfs(it, vis, adj);
+        }
+    }
+}
+int main()
+{
+   int n, m;
+   cin>>n>>m;
+   vector<bool> vis(n+1, false);
+   map<int, vector<int>> adj;
+   lp(i,m){
+    int a,b;
+    cin>>a>>b;
+    adj[a].pb(b);
+    adj[b].pb(a);
+   }
+   vector<pair<int,int>>ans;
+   int prev = 0;
+   loop(i, n){
+       if(!vis[i]){
+          dfs(i, vis, adj);
+          ans.pb({prev, i});
+          prev = i;
+       }
+   }
+   ans.erase(ans.begin());
+   cout<<ans.size()<<endl;
+   for(auto it: ans)cout<<it.f<< " "<<it.s<<endl;
+
+}
+
