@@ -1,0 +1,74 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+/*
+    bellman ford to print out cycles
+    store parent of each node
+    run n times (1 more than normal) to make sure that if ndoe 1 is in the cycle, it has a parent and isnt -1;
+    run another time to see if there is any decrease( if no cycle there shouldnt). If there is a decrease, store that value
+    go to parent of that n times because current smaller value could just be an offshoot of the cycle and not acutally on the cycle,  so by going back guarentee on cycle
+    continue going back until parent is starting
+    reverse to get forward direction and print
+*/
+
+int main()
+{
+   int n,m;
+   cin>>n>>m;
+   vector<tuple<int,int,int>> edge;
+   vector<int> parent(n+1, -1);
+   lp(i,m){
+     lli a,b,w;
+     cin>>a>>b>>w;
+     edge.pb({a,b,w});
+   }
+   ///---------------bellman ford;-------------------------------------
+   vector<lli>dist(n+1, INF);
+   dist[1] = 0;
+   loop(i, n){
+     for (auto e:edge){
+        lli a,b,w;
+        tie(a,b,w) = e;
+        if(dist[b] > dist[a] + w){
+            dist[b] = dist[a] + w;
+            parent[b] = a;
+        }
+     }
+   }
+   ///------run it again to test if negative cycle by seeing after another n-1 cycles if anything changed. -------------------
+   int cyclestart = 0;
+   vector<int> ans;
+   bool negcyc = false;
+
+   for (auto e:edge){
+        lli a,b,w;
+        tie(a,b,w) = e;
+        if(dist[b] > dist[a] + w){
+            negcyc = true;
+            cyclestart = a;
+            break;
+
+        }
+     }
+   if(!negcyc){
+    cout<<"NO"<<endl;
+    return 0;
+   }
+   lp(i, n)cyclestart = parent[cyclestart];
+   ans.pb(cyclestart);
+   while(parent[ans.back()] != cyclestart) ans.pb(parent[ans.back()]);
+   ans.pb(parent[ans.back()]);
+   reverse(ans.begin(), ans.end());
+   cout<<"YES"<<endl;
+   for(auto it: ans)cout<<it<< " ";
+   return 0;
+}
