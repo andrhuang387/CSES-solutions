@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define pi pair<lli,lli>
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 100000000000000000
+#define mod  10000
+///
+/*
+   trivial/basic dijkstras
+*/
+
+int main()
+{
+   lli n,m;
+   cin>>n>>m;
+   vector<lli> dist(n+1,INF);
+   vector<vector<pi>> adj(n+1);
+   lp(i,m){
+    lli a,b,c;
+    cin>>a>>b>>c;
+    adj[a].pb({b,c});
+   }
+   dist[1] = 0;
+   priority_queue<pi>q;
+   q.push({0,1});
+   vector<bool> processed(n+1, false);
+   while(!q.empty()){
+    lli a  = q.top().second; q.pop();
+    if(processed[a])continue;
+    processed[a] = true;
+    for(auto it: adj[a]){
+        lli b = it.f; lli w = it.s;
+        if(dist[a] + w < dist[b]){
+            dist[b] = dist[a] +w;
+            q.push({-dist[b], b});
+        }
+    }
+   }
+   loop(i,n)cout<<dist[i]<< " ";
+   return 0;
+}
