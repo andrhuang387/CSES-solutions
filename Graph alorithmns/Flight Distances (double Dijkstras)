@@ -12,7 +12,7 @@ using namespace std;
 /*
     use dijkstras on both ends
     one starting from 1 and one starting from n;
-    loop through all nodes, divide intermediate node by half, an add up values of two sides( to city) and (from city +1 to end)
+    loop through all nodes and its adjacent edges, divide intermediate node by half, an add up values of two sides( to city) and (from city +1 to end)
     get smallest and that is answer
 */
 lli n, m,k;
