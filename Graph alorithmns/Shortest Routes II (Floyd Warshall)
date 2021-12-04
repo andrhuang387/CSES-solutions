@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+///
+/*
+   basic floyd warshall
+*/
+
+int main()
+{
+   lli n,m, q;
+   cin>>n>>m>>q;
+   vector<vector<lli>> dist(n+1,vector<lli> (n+1, INF));
+   lp(i,m){
+    lli a,b,w;
+    cin>>a>>b>>w;
+    dist[a][b] = min(dist[a][b], w);
+    dist[b][a] = min(dist[b][a], w);
+   }
+   loop(i,n) dist[i][i] = 0; // make all zero
+   loop(k, n){
+     loop(i, n){
+       loop(j,n ){
+         dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+       }
+     }
+   }
+   loop(i,q){
+    lli a,b;
+    cin>>a>>b;
+    cout<<(dist[a][b] == INF? -1:dist[a][b]) <<endl;
+   }
+   return 0;
+}
