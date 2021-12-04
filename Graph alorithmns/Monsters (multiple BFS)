@@ -1,0 +1,110 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 100000000
+#define mod  10000
+///
+/*
+   1. create grid
+   2. find closest monster distance at each available square using bfs
+   3. find possible routes from A that has closer distance to A than monster
+   4. create backtrack grid that has a backtrack list of parents 
+   5. get backtrack list of to make grid starting from finish location, and then reverse that vector
+   6. quit when beginning is your unique value. Make sure starting is not the same as the "background" parent because that would cause infinite loop errors
+*/
+lli n,m;
+struct stuff{
+    lli y;
+    lli x;
+    lli distance;
+};
+struct leave{
+    lli y;
+    lli x;
+    lli distance;
+    lli parent;
+};
+lli dy[4]  ={1,-1, 0, 0};
+lli dx[4] = {0,0,1,-1};
+char dir[4] = {'D','U','R','L' };
+int main()
+{
+   cin>>n>>m;
+   vector<vector<char>> grid(n+1, vector<char> (m+1));
+   vector<vector<lli>> closest(n+1, vector<lli>(m+1, INF));  //gets all the closest monster grid pollis
+   queue<stuff> q;
+   pair<lli,lli> start;
+   //make grid and find starting value
+   lp(i,n){
+    string s;
+    cin>>s;
+    lp(j, m){
+        grid[i][j] = s[j];
+        if(s[j] == 'M') {
+            q.push({i,j,0});
+        }
+        if(s[j] == 'A')start = {i,j};
+    }
+   }
+   ///bfs for closest monster
+   while(!q.empty()){
+     stuff v = q.front();
+     q.pop();
+     if(closest[v.y][v.x] <= v.distance)continue;
+     closest[v.y][v.x] = v.distance;
+     lp(i,4){
+        lli nx = v.x  + dx[i];
+        lli ny = v.y  + dy[i];
+        if(nx < 0 || ny  <0 || ny >=n || nx>=m )continue;
+        if(grid[ny][nx] == '#')continue;
+        q.push({ny,nx, v.distance+1});
+     }
+   }
+   ///-----above works ----------------- made distance of each grid relative to monsters////
+   //solve for possible solution given distance of monsters. If none possible, print none
+   queue<leave> qu;
+   vector<vector<char>> vis(n+1, vector<char> (m+1, 'X'));
+   qu.push({start.f, start.s, 0, 'Z'});
+   pair<lli,lli> node;
+   while(!qu.empty()){
+    leave v = qu.front();
+    qu.pop();
+    if(vis[v.y][v.x]!= 'X')continue;
+    if(closest[v.y][v.x] <= v.distance)continue;
+    vis[v.y][v.x] = v.parent;
+    if(v.y == n-1 || v.x == m-1 || v.y == 0 || v.x == 0){ //finished
+        node = {v.y, v.x};
+        goto here;
+    }
+    lp(i,4){
+        lli nx = v.x  + dx[i];
+        lli ny = v.y  + dy[i];
+        if(nx < 0 || ny  <0 || ny >=n || nx>=m )continue;
+        if(grid[ny][nx] == '#')continue;
+        qu.push({ny,nx, v.distance+1, dir[i]});
+     }
+   }
+   cout<<"NO"<<endl;
+   return 0;
+   here:;
+   ///get backtrack grid from ending and get solution. Reverse to get sequence
+   vector<char> solution;
+   while(vis[node.f][node.s] != 'Z'){
+      solution.pb(vis[node.f][node.s]);
+      if(vis[node.f][node.s] == 'R') node.s--;
+      else if(vis[node.f][node.s] == 'L') node.s++;
+      else if(vis[node.f][node.s] == 'U') node.f++;
+      else if(vis[node.f][node.s] == 'D') node.f--;
+   }
+   reverse(solution.begin(), solution.end());
+   cout<<"YES"<<endl;
+   cout<<solution.size()<<endl;
+   for(auto it: solution)cout<<it;
+   return 0;
+}
