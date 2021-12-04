@@ -1,0 +1,93 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+///
+/*
+   bellman ford with slight alterations
+   1. get maximum value using bellman ford, multiply weights by -1 to get maximum
+   2. to make sure there are no cycles, want to find:
+       i. all nodes that end up to n
+       ii.all nodes that node 1 end up to
+   3. if cycle involving one a node in both sets, then cause error and lead to infinity. 
+       - must be in both sets because if only 1, then impossible to get to that node from 1
+       - if only 2, then impossible to get to that node and get to the end node n
+*/
+void findparent(int v, vector<vector<int>> parent,set<int>& nneighbors)
+{
+    for(auto it: parent[v]){
+        if(nneighbors.find(it) == nneighbors.end()){
+                nneighbors.insert(it);
+                findparent(it, parent, nneighbors);
+        }
+    }
+}
+void findchild(int v, vector<vector<int>> child,set<int>& oneighbors)
+{
+    for(auto it: child[v]){
+        if(oneighbors.find(it) == oneighbors.end()){
+                oneighbors.insert(it);
+                findparent(it, child, oneighbors);
+        }
+    }
+}
+int main()
+{
+   int n,m;
+   cin>>n>>m;
+   vector<tuple<int,int,int>> edge;
+   vector<vector<int>> parent(n+1);
+   vector<vector<int>> child(n+1);
+   set<int> nneighbors;
+   set<int> oneighbors;
+   oneighbors.insert(1);
+   nneighbors.insert(n);
+   lp(i,m){
+     lli a,b,w;
+     cin>>a>>b>>w;
+     parent[b].pb(a);
+     child[a].pb(b);\
+     //to change to find maximum distance, set w to negative and continue bellman ford. Just remember to remultiply by -1 to reset at end
+     w *= -1;  
+     edge.pb({a,b,w});
+   }
+   ///find all parents of n
+   findparent(n, parent, nneighbors);
+   ///find all chidlren of 1
+   findchild(1, child, oneighbors);
+   ///---------------bellman ford;-------------------------------------
+   vector<lli>dist(n+1, INF);
+   dist[1] = 0;
+   loop(i, n-1){
+     for (auto e:edge){
+        lli a,b,w;
+        tie(a,b,w) = e;
+        dist[b] = min(dist[b], dist[a] + w);
+     }
+   }
+   ///------run it again to test if negative cycle by seeing after another n-1 cycles if anything changed. -------------------
+   vector<lli> olddist = dist;
+   bool negcyc = false;
+   loop(i, n-1){
+     for (auto e:edge){
+        lli a,b,w;
+        tie(a,b,w) = e;
+        dist[b] = min(dist[b], dist[a] + w);
+     }
+   }
+   ///if something changed, and if it is both accessible by 1 and goes to n, then it is a possible loop of a path 1 -> cycle -> which would lead to infinity. If true, print -1
+   loop(i,n)if(olddist[i] != dist[i] && nneighbors.find(i)!= nneighbors.end() && oneighbors.find(i)!= oneighbors.end() )negcyc = true;
+   if(negcyc){
+    cout<<-1<<endl;
+    return 0;
+   }
+   cout<<-1*dist[n]<< " ";
+}
