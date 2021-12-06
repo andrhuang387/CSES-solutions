@@ -1,0 +1,51 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+///
+/*
+   dijkstras
+   each node contains vector of size k
+   since k small, if greater than sorted back  (largest) place in and sort
+   if better, then push into priority queue
+*/
+
+int main()
+{
+   int n, m, k;
+   cin>>n>>m>>k;
+   vector<vector<pi>> adj(n+1);
+   vector<vector<lli>> dist(n+1, vector<lli> (k, INF)); ///maybe use a set
+   lp(i, m){
+     int a,b,w;
+     cin>>a>>b>>w;
+     adj[a].pb({b,w});
+   }
+   dist[1][0] = 0;
+   priority_queue<pi> q;
+   q.push({0, 1});
+   while(!q.empty()){
+    lli a = q.top().s; ///get vertex
+    lli d = q.top().f;
+    d*= -1;
+    q.pop();
+    if(dist[a].back() < d)continue;
+      for(auto it: adj[a]){
+        lli b = it.f; lli w = it.s;
+        if(d  + w < dist[b].back()){ ///it is not the largest, and minimizes
+            dist[b].back() = d  + w;
+            sort(dist[b].begin() , dist[b].end());
+            q.push({-(d  +w), b});
+        }
+      }
+   }
+   for(auto it: dist[n])cout<<it<< " ";
+}
