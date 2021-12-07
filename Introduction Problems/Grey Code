@@ -1,29 +1,39 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-#define MXN 200001
+#define MAXN 100001
 #define s second
 #define f first
 #define lli long long int
+#define pi pair<lli, lli>
 #define pb push_back
-typedef vector<lli> vi;
-#define lp(i, n)    for(int i = 0; i<n; i++)
-#define INF 2000000000
-#define mod 1000000007
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+#define vvi vector<vector<int>>
+///
 /*
-    
+   convert binary to graycode: xor the leftmost and second leftmost value and continue down.
 */
+bool vis[MAXN];
+vector<int> adj[MAXN][2];
+void graycode(int n)
+{
+    lp(i, (1<<n)){
+        //get base 10 graycode
+        int btengcode = (i^(i>>1));
+        //use bitset to covert to binary form. Since bitset value is static, use string substring to get substring and not have leading zeros.
+        bitset<32> r(btengcode);
+        //convert to string
+        string s = r.to_string();
+        ///get 32-n to the end
+        cout<<s.substr(32 - n)<<endl;
+
+    }
+}
 int main()
 {
-    int n;
-    cin>>n;
-    for (int i = 0; i < (1 << n); i++)
-    {
-        // Generating the decimal
-        // values of gray code then using
-        // bitset to convert them to binary form
-        int val = (i ^ (i >> 1));
-        bitset<32> r(val);
-        string s = r.to_string();
-        cout << s.substr(32 - n) <<endl;
-    }
+   int n;
+   cin>>n;
+   graycode(n);
 }
