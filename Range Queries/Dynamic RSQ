@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+#define vvi vector<vector<lli>>
+#define vi vector<lli>
+///
+/*
+    fenwick tree/ BIT
+*/
+vi BIT (MAXN);
+lli n, q;
+lli sum(lli k)
+{
+    lli s = 0;
+    while(k>=1){
+        s += BIT[k];
+        k-= k&-k;
+    }
+    return s;
+}
+void update(lli k, lli x)
+{
+    while(k<=n){
+        BIT[k] += x;
+        k += k&-k;
+    }
+}
+int main()
+{
+   cin>>n>>q;
+   vi ar(n+1);
+   loop(i, n){
+       cin>>ar[i];
+       update(i, ar[i]);
+   }
+   lp(i, q){
+      lli c, a,b;
+      cin>>a>>b>>c;
+      if(a == 1){
+        lli dif = c - ar[b];   //change value to know how muchto subtract / change
+         ar[b] = c;
+        update(b, dif);
+      }
+      else{
+        cout<<sum(c)  - sum(b-1)<<endl;
+      }
+   }
+   return 0;
+}
