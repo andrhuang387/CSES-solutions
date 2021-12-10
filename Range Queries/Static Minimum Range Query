@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 200001
+#define s second
+#define f first
+#define lli long long int
+#define pi pair<lli, lli>
+#define pb push_back
+#define lp(i, n)    for(lli i = 0; i<n; i++)
+#define loop(i,n) for(lli i = 1; i<=n; i++)
+#define INF 10000000000000001
+#define mod  10000
+#define vvi vector<vector<lli>>
+#define vi vector<lli>
+///
+/*
+
+*/
+lli n, q;
+void logtable(vector<lli> &log)
+{
+    log[1] = 0;
+    for(lli i = 2; i<=n; i++){
+        log[i] = log[i/2] +1;
+    }
+}
+
+int main()
+{
+   cin>>n>>q;
+   vector<lli> a(n+1);
+   lp(i,n){
+       cin>>a[i];
+   }
+   ///create logtable
+   vector<lli> log(n+1);
+   logtable(log);
+   lli k = log[n]+1;
+   //sparsetable (value, jump)
+   vvi st(MAXN, vi(k+1));
+   ///initialize all 2^0 to be just element
+   lp(i,n)st[i][0] = a[i];
+   ///each new range is minimum of two overlapping smaller powers of two
+   loop(j, k){
+       for(lli i = 0; i  +(1<<j) <= n; i++) st[i][j] = min(st[i][j-1], st[i + (1<<(j-1))][j-1]);
+   }
+   ///given range, can find smaller power of two value
+   lp(i, q){
+      lli r,l;
+      cin>>l>>r;
+      r--, l--;
+      lli dif = log[r - l  +1];
+      cout<<min(st[l][dif], st[r - (1<<dif) + 1][dif])<<endl;
+   }
+
+
+
+
+}
