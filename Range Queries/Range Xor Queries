@@ -15,10 +15,6 @@ vector<int> adj[MAXN];
      normal segment tree
 */
 vector<lli> seg_tree( (1<<19), 0);
-int solveXOR(lli a, lli b)
-{
-
-}
 int qry(lli lo, lli hi )
 {
     lli ret = 0;
