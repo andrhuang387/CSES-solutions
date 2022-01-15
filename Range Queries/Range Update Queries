@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 100001
+#define INF 20000000000000
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+vector<int> adj[MAXN];
+/*
+     normal segment tree
+*/
+vector<lli> seg_tree ((1<<19), 0);
+lli qry(lli k)
+{
+    int lo = (1<<18), hi =  k  + (1<<18);
+    lli ret = 0 ;
+    while(lo<=hi){
+        if(lo%2 == 1) ret += seg_tree[lo], lo++;
+        if(hi%2 == 0) ret += seg_tree[hi], hi--;
+        hi/=2, lo/=2;
+    }
+    return ret;
+}
+void upd(int k, lli x)
+{
+    k+= (1<<18);
+    seg_tree[k] +=x;
+    while(k>1){
+        k/=2;
+        seg_tree[k] = seg_tree[2*k] + seg_tree[2*k+1];
+    }
+}
+int main(){
+  int n, q;
+  cin>>n>>q;
+  lp(i,n) {
+     lli x;
+     cin>>x;
+     upd(i ,x);
+     upd(i+1, -x);
+  }
+  lp(i,q){
+    int w;
+    cin>>w;
+    if(w == 1 ){
+        lli a,b, u;
+        cin>>a>>b>>u;
+        a--, b--;
+        upd(a, u);
+        upd(b+1, -u);
+    }
+    if(w == 2){
+        int k;
+        cin>>k;
+        k--;
+        cout<<qry(k)<<endl;
+    }
+  }
+}
