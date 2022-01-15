@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 1001
+#define INF 20000000000000
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+vector<int> adj[MAXN];
+/*
+    2d prefix sum
+    dp is dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1] + cell value
+    grid dp is -1 from xo, yo and from both
+*/
+int a[MAXN][MAXN], dp[MAXN][MAXN];
+int main(){
+  int n ,q;
+  cin>>n>>q;
+  loop(i, 1, n){
+     string s;
+     cin>>s;
+     loop(j, 1, n){
+        a[i][j] = s[j-1];
+     }
+  }
+  loop(i, 1, n){
+    loop(j,1, n){
+       dp[i][j] = (a[i][j] == '*')?1:0;
+       dp[i][j] += dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1];
+    }
+  }
+  lp(i, q){
+    int xo, yo, xt, yt;
+    cin>>yo>>xo>>yt>>xt;
+    cout<<dp[yt][xt] +  dp[yo-1][xo-1] - dp[yt][xo -1] - dp[yo -1][xt]<<endl;
+  }
+}
