@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 100001
+#define INF 20000000000000
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+vector<int> adj[MAXN];
+/*
+     normal segment tree
+*/
+vector<lli> seg_tree( (1<<19), 0);
+int solveXOR(lli a, lli b)
+{
+
+}
+int qry(lli lo, lli hi )
+{
+    lli ret = 0;
+    lo += (1<<18), hi+= (1<<18);
+    while(lo<= hi){
+        if(lo%2 == 1) ret = ret^seg_tree[lo], lo++;
+        if(hi%2 == 0) ret = ret^seg_tree[hi], hi--;
+        lo/=2, hi/=2;
+    }
+    return ret;
+}
+void upd(lli k, lli x)
+{
+    k+= (1<<18);
+    seg_tree[k] = x;
+    while(k>1){
+        k/=2;
+        seg_tree[k] = seg_tree[2*k]^seg_tree[2*k+1];
+    }
+}
+int main(){
+  int n , q;
+  cin>>n>>q;
+  loop(i,1, n) {
+     int x;
+     cin>>x;
+     upd(i, x);
+  }
+  lp(i, q){
+    int a,b;
+    cin>>a>>b;
+    cout<<qry(a, b)<<endl;
+  }
+}
