@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 1001
+#define INF 20000000000000
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+typedef vector<vector<lli>> mat;
+/*
+    use matrix multiplication for grid
+*/
+mat operator* (mat a, mat b)
+{
+    mat ret(a.size(), vi(b[0].size(), 0));
+    lp(i, a.size()){
+       lp(j, b[0].size()){
+          lp(k, a[0].size()){
+            ret[i][j] = (ret[i][j] + (a[i][k]* b[k][j])%mod)%mod;
+          }
+       }
+    }
+    return ret;
+}
+mat operator^ (mat a, lli k)
+{
+    mat ret(a.size(), vi(a[0].size(), 0));
+    for(int i =0  ; i < a.size(); i ++ ) ret[i][i] = 1;
+    while(k){
+        if(k&1) ret = ret*a;
+        a = a*a;
+        k>>=1;
+    }
+    return ret;
+}
+int main(){
+   lli n, m, k;
+   cin>>n>>m>>k;
+   mat adj(n, vi(n,0));
+   lp(i, m){
+       lli a,b;
+       cin>>a>>b;
+       a--, b--;
+       adj[a][b] ++;
+   }
+   mat res = adj^k;
+   cout<<res[0][n-1];
+}
