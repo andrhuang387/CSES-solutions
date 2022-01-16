@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 1001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+typedef vector<vector<lli>> mat;
+/*
+    same thing except that your graph path will be minimum instead of adding
+    initially whole graph is infinity
+    graph[i][j] =  shortest distance from i to k  + shortest distance from k to j
+*/
+mat operator* (mat a, mat b)
+{
+    mat ret (a.size(),  vi(b[0].size(), INF));
+    for(int i = 0 ; i  <a.size(); i++){
+        for(int j = 0; j<b[0].size(); j++){
+            for(int k = 0; k<a[0].size();k++){
+                ret[i][j] = min(ret[i][j], a[i][k] + b[k][j]);
+            }
+        }
+    }
+    return ret;
+}
+mat operator^(mat a, lli k)
+{
+    mat ret(a.size(), vi(a[0].size()));
+    int f = 0;
+    while(k){
+        if(k&1){
+            if(f) ret = ret *a;
+            else ret = a, f = 1;
+        }
+        a = a*a, k>>=1;
+    }
+    return ret;
+}
+int main(){
+   lli n , m , k;
+   cin>>n>>m>>k;
+   mat adj(n, vi(n, INF));
+   lp(i,m){
+      lli a,b,w;
+      cin>>a>>b>>w;
+      a--, b--;
+      adj[a][b] = min(adj[a][b], w);
+   }
+   mat res = adj^k;
+   cout<<((res[0][n-1] != INF)?  res[0][n-1]:-1);
+   return 0;
+}
