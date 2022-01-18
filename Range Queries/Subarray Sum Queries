@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 1001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+
+/*
+    subarray sum
+    for each range, need:
+       max left-ending
+       max right-ending
+       sum
+       max subarray
+    given left[l ,k]  right[k+1, r]
+      subarray = max (left sub, right sub), max(0, left.right + right.left)
+      sum = left.sum  +right.sum
+       leftend = max(0, max(left.left, left.sum + right.left)
+       rigthend = max(0, max(right.right, right.sum + left.right)
+*/
+struct stuff{
+   lli sub =  0, l = 0 ,r = 0, sum = 0 ;
+};
+vector<stuff> seg_tree((1<<19));
+void upd(lli k, lli x)
+{
+    k+= (1<<18);
+    seg_tree[k].sub = seg_tree[k].l =  seg_tree[k].r = max(0ll,x), seg_tree[k].sum = x;
+    while(k>1){
+        k/=2;
+        seg_tree[k].sub = max(max(seg_tree[2*k].sub , seg_tree[2*k+1].sub), max(0ll, seg_tree[2*k].r + seg_tree[2*k+1].l));
+        seg_tree[k].sum = seg_tree[2*k].sum + seg_tree[2*k+1].sum;
+        seg_tree[k].l = max(0ll, max(seg_tree[2*k].l , seg_tree[2*k].sum + seg_tree[2*k +1].l));
+        seg_tree[k].r = max(0ll, max(seg_tree[2*k+1].r, seg_tree[2*k +1].sum + seg_tree[2*k].r ));
+    }
+}
+int main() {
+    int n, q;
+    cin>>n>>q;
+    lp(i,n){
+        lli x;
+        cin>>x;
+        upd(i, x);
+    }
+    lp(i,q){
+       int a,b;
+       cin>>a>>b;
+       a--;
+       upd(a, b);
+       cout<<seg_tree[1].sub<<endl;;
+    }
+}
