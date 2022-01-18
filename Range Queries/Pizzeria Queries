@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 400001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+
+/*
+     cost is val + |j - i|
+        if i>=j cost  = val  - j + i  left
+        if i<=j cost = val  + j - i  right
+     so, since now, the difference caused by i is constant, we can build two segment trees of value + element position and value - element position
+     solution is min two queries +- query position
+*/
+vector<lli> seg_treeleft((1<<19), INF), seg_treeright((1<<19), INF);
+void upd(lli k, lli x, vector<lli> & tree)
+{
+    k+=(1<<18);
+    tree[k] = x;
+    while(k>1){
+        k/=2;
+        tree[k] = min(tree[2*k], tree[2*k +1]);
+    }
+}
+lli qry(lli lo, lli hi,vector<lli> &tree)
+{
+    lo+= (1<<18), hi+= (1<<18);
+    lli ret = INF;
+    while(lo<= hi){
+        if(lo&1) ret = min(ret, tree[lo++]);
+        if(~hi&1) ret = min(ret, tree[hi--]);
+        lo>>=1, hi>>=1;
+    }
+    return ret;
+}
+int main() {
+    int n,q;
+    cin>>n>>q;
+    loop(i,1,n){
+       lli x;
+       cin>>x;
+       upd(i, x - i, seg_treeleft);
+       upd(i, x + i, seg_treeright);
+    }
+    lp(i,q){
+      int w;
+      cin>>w;
+      if(w==1){
+        lli k, x;
+        cin>>k>>x;
+        //k--;
+        upd(k, x-k, seg_treeleft);
+        upd(k, x  +k, seg_treeright);
+      }
+      if(w==2){
+        lli k;
+        cin>>k;
+        //k--;
+        cout<<min(qry(1, k, seg_treeleft) + k, qry(k, n,seg_treeright) -k)<<endl;
+      }
+    }
+}
