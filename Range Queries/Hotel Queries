@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 1001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+   segment tree + binary search
+   hotel queries
+*/
+vector<int> seg_tree( (1<<19), 0);
+int n,m;
+void upd(lli k, int x)
+{
+    k+= (1<<18);
+    seg_tree[k] += x;
+    while(k>1){
+        k/=2;
+        seg_tree[k] = max(seg_tree[2*k], seg_tree[2*k +1]);
+    }
+}
+int qry(int lo, int hi)
+{
+    lo+= (1<<18);
+    hi+=(1<<18);
+    int ret = 0;
+    while(lo<=hi){
+        if(lo%2 == 1) ret = max(ret, seg_tree[lo]), lo++;
+        if(hi%2 == 0) ret = max(ret, seg_tree[hi]), hi--;
+        lo/=2, hi/=2;
+    }
+    return ret;
+}
+void binarysearch(int r)
+{
+        int left = 0;
+        int right = n-1;
+        int ans = -1;
+        while(left <= right){
+            int mid = (left + right)/2;
+            if(qry(0,mid)<r){
+                left = mid  +1;
+                ans = mid;
+            }
+            else{
+                right = mid - 1;
+            }
+        }
+
+        if(ans == n-1)cout<<0<<endl;
+        else{
+            cout<<(ans + 1) +1<<endl;
+            upd(ans+1, -r);
+        }
+}
+int main(){
+     cin>>n>>m;
+     lp(i, n){
+        int x;
+        cin>>x;
+        upd(i, x);
+     }
+     lp(i ,m){
+        int r;
+        cin>>r;
+        ///binary search
+        binarysearch(r);
+     }
+
+}
