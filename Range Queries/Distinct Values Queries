@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 400001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+
+/*
+    use a BIT (segment trees work too but longer to implement)
+    store vector of queries [starting] -  > [ending, query number]
+    have a list of distinct and if is first element
+    go from n -> 1 so that you can get each element and update with previous
+    get prefix sum of each ending point, as it will correlate to current staring index (all before will just be zero)
+    when there is a visited location, set all in after it to zero and make location 1, and make first[x] new location
+*/
+int bit[MAXN];
+vi x(MAXN);
+vector<pair<int,int>> query[MAXN];
+int n,q;
+map<int,int> fst;
+vi ans(MAXN);
+int qry(int i)
+{
+    int res = 0;
+    for(; i; i-= i&(-i))res += bit[i];
+    return res;
+}
+void upd(int i, int val)
+{
+    for(; i<=n; i += i&(-i)){
+        bit[i]+= val;
+    }
+}
+int main() {
+    cin>>n>>q;
+    lp(i,n) cin>>x[i];
+    ///add query of ending and index
+    lp(i, q){
+        int a,b;
+        cin>>a>>b;
+        query[a].pb({b, i});
+    }
+    for(int i = n; i>=1; i--){
+        int val = x[i-1];
+        if(fst.count(val)) upd(fst[val], -1);
+        fst[val] = i;
+        upd(i, 1);
+        for(auto it: query[i]){
+            ans[it.s] = qry(it.f);
+        }
+    }
+    lp(i,q)cout<<ans[i]<<endl;
+}
