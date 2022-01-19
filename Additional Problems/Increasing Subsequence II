@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+   usually when you are given a task where you need to find all smaller x on the left of an element (j<i), 
+   you want to make a segment tree. Increment i, and as you move across x, qry all values less than it
+   also, note that there is coordinate compression for the binary indexed tree to work
+*/
+int n;
+int bit[MAXN];
+void upd(int k, lli x)
+{
+    for(; k<=n;k += (k& (-k))) bit[k]  = (bit[k] + x)%mod;
+}
+lli qry(int k)
+{
+    lli ret = 0;
+    for(;k; k-= (k& (-k)) ) ret  = (ret + bit[k])%mod;
+    return ret;
+}
+int main()
+{
+   cin>>n;
+   vector<int> a(n);
+   map<int, int> mp;
+   lp(i,n){
+      cin>>a[i];
+      mp[a[i]]++;
+   }
+   int ct  = 0 ;
+   for(auto &it : mp){
+       it.second = ++ct;
+   }
+   lp(i,n)a[i] = mp[a[i]];
+   lli ans = 0 ;
+   lp(i,n){
+       lli nsubseq = 1 + qry(a[i]-1);
+       ans = (ans + nsubseq)%mod;
+       upd(a[i], nsubseq);
+   }
+   cout<<ans<<endl;
+}
