@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    dfs all values and get size of each
+*/
+vector<vector<int>> tree(MAXN);
+int ans[MAXN];
+int dfs(int v)
+{
+    int ret = 0;
+    if(ans[v] != -1) return ans[v];
+    for(auto it: tree[v])ret += dfs(it);
+    ans[v] = ret;
+    return 1 + ret;
+}
+int main()
+{
+   memset(ans, -1 ,sizeof(ans));
+   int n;
+   cin>>n;
+   loop(i,2,n){
+      int x;
+      cin>>x;
+      tree[x].pb(i);
+   }
+   dfs(1);
+   loop(i,1, n)cout<<ans[i]<< " " ;
+}
