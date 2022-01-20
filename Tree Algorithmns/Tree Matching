@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    arbitraily root each node
+    there are 2 states, either edge to one of the children or no edge to children
+    for each dfs, test all children
+         if not edge to child, each child can either connect to own child, or no edge
+         dp needs best of each child
+         dpnochild = sum of max(num with child -> its child , num with child not own child)
+         dpchild = num child not -> ownchild  +1 (for the connection of v to c) + sum of max of child -> grandchild or no child -> grandchild
+            rewriting this is just dp0[v] - max( child -  >its child, child not -> its child)
+*/
+int n, dp1[MAXN], dp0[MAXN];
+vector<int> adj[MAXN];
+void dfs(int v, int p)
+{
+    for(auto c: adj[v]){
+        if(c == p) continue;
+        dfs(c,v);
+        dp0[v] += max(dp0[c], dp1[c]);
+    }
+    for(auto c: adj[v]){
+        if(c==p)continue;
+        dp1[v] = max(dp1[v], dp0[c] + 1 + (dp0[v] - max(dp0[c], dp1[c])));
+    }
+}
+int main()
+{
+   cin>>n;
+   lp(i, n-1){
+      int a,b;
+      cin>>a>>b;
+      a-- ,b--;
+      adj[a].pb(b);
+      adj[b].pb(a);
+   }
+   dfs(0, -1);
+   cout<<max(dp0[0], dp1[0]);
+}
