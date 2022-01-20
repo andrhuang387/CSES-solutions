@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    2 dfs. dfs return <farthest node, distance>
+    arbitrary root goes through "intersection area" where diameter goes through. Distance to intersection area is constant. want to maximize by getting longest sequence from intersection
+    from longest dfs to get other longest. this is longest area
+*/
+int n;
+vector<int> adj[MAXN];
+///<node,  distance>
+pair<int,int> dfs(int v, int p)
+{
+    pair<int,int> distnode = {v,0};
+    for(auto c: adj[v]){
+        if(c == p) continue;
+        pair<int,int> temp = dfs(c,v);
+        temp.s +=1;
+        if(distnode.s < temp.s){
+            distnode = temp;
+        }
+    }
+    return distnode;
+}
+int main()
+{
+   cin>>n;
+   lp(i, n-1){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+      adj[b].pb(a);
+   }
+   pair<int,int> farthest = dfs(1, -1);
+   pair<int,int> diameter = dfs(farthest.f, -1);
+   cout<<diameter.s<<endl;
+}
