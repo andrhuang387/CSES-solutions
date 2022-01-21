@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    LCA using binary lifting  +find minimum of euler tour range
+*/
+const int  ms = ceil(log2(MAXN));
+vi tin, tout;
+int up[ms][MAXN];
+int n, q;
+vector<int> adj[MAXN];
+int timer;
+void dfs(int v, int p)
+{
+    tin[v] = ++timer;
+    up[0][v] = p;
+    loop(i, 1, ms-1){
+       up[i][v] = up[i-1][up[i-1][v]];
+    }
+    for(auto c: adj[v]){
+        if( c == p) continue;
+        dfs(c, v);
+    }
+    tout[v] = ++ timer;
+}
+bool ancestor(int a, int b)
+{
+    return tin[a]<= tin[b] && tout[a] >= tout[b];
+}
+int lca (int a, int b)
+{
+    if(ancestor(a, b)) return a;
+    if(ancestor(b,a)) return b;
+    for(int i = ms-1; i>=0; i--){
+        if(!ancestor(up[i][a], b)) a = up[i][a];
+    }
+    return up[0][a];
+}
+int main()
+{
+   cin>>n>>q;
+   tin.resize(n);
+   tout.resize(n);
+   loop(i,2, n){
+      int a;
+      cin>>a;
+      adj[i].pb(a);
+      adj[a].pb(i);
+   }
+   dfs(1, 1);
+   lp(i,q){
+      int a,b;
+      cin>>a>>b;
+      cout<<lca(a,b)<<endl;
+   }
+}
