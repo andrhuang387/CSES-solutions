@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    binary lifting
+*/
+const int ms = ceil(log2(MAXN));
+int up[ms][MAXN];
+int jmp(int v, int d)
+{
+    lp(i, ms){
+      if(d & (1<<i)) v = up[i][v];
+    }
+    return v?:-1;
+}
+int main()
+{
+    int n,q;
+    cin>>n>>q;
+    loop(i, 2, n){
+       int x;
+        cin>>x;
+       up[0][i] = x;
+    }
+    loop(i, 1, ms-1){
+       loop(j, 1, n) up[i][j] = up[i-1][up[i-1][j]];
+    }
+    lp(i,q){
+       int v, d;
+       cin>>v>>d;
+       cout<<jmp(v, d)<<endl;
+    }
+}
