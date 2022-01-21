@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    euler tour + segment tree
+    0. store node values as array
+    1. euler tour to get size
+      a. map all node id to the location which it appears in the array
+    2. add nodes to array in format of the mapped value using nodemp
+    3. get queries
+       a. when given query to find sum, get range of values by segment tree 
+       for both, use nodemp to get location in grid
+    nromal segment tree
+*/
+lli n,k, seg_tree[1<<19], treesize[MAXN];
+vector<int>adj[MAXN];
+int ct  = 0 ;
+map<int,int> nodemp; // <node id, term added into sequence>
+
+lli qry (lli lo, lli hi)
+{
+    lo += (1<<18), hi += (1<<18);
+    lli ret = 0;
+    while(lo<= hi){
+        if( lo&1) ret  = ret + seg_tree[lo++];
+        if(~hi&1) ret = ret +  seg_tree[hi--];
+        lo/=2, hi/=2;
+    }
+    return ret;
+}
+void upd(int k ,lli x)
+{
+    k+= (1<<18);
+    seg_tree[k] = x;
+    while( k >1){
+        k/=2;
+        seg_tree[k] = seg_tree[2*k] + seg_tree[2*k  +1];
+    }
+}
+
+lli etour(lli v, lli p)
+{
+    nodemp[v] = ct++;
+    for(auto c : adj[v]){
+        if(c == p) continue;
+        treesize[v] += etour(c, v);
+    }
+    treesize[v] +=1;
+    return treesize[v];
+}
+lli find(lli k)
+{
+    lli lo = nodemp[k];
+    lli hi = nodemp[k] + (treesize[k] - 1);
+    return qry(lo,hi);
+}
+int main()
+{
+    cin>>n>>k;
+    // 0 indexed
+    lli a[MAXN];
+    lp(i,n) cin>>a[i];
+    lp(i,n-1){
+      lli a,b;
+      cin>>a>>b;
+      a-- ,b--;
+      adj[a].pb(b);
+      adj[b].pb(a);
+    }
+    etour(0, -1);
+    lp(i,n)upd(nodemp[i], a[i]);
+    //general seg tree
+
+    lp(i, k){
+      int w;
+      cin>>w;
+      if(w == 1){
+        lli v, x;
+        cin>>v>>x;
+        v--;
+        upd(nodemp[v],x);
+      }
+      if (w== 2){
+        lli v;
+        cin>>v;
+        v--;
+        cout<<find(v)<<endl;
+      }
+    }
+}
