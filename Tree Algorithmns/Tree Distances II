@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    to get sum:
+       need distance down,  + distance up node
+    down[i] = {value, number of children}
+    ans[i] = down[v] + (ans parent without taking v subtree (which is v.down + v.nchild) + number of connections needed to connect both subtree
+*/
+vector<int> adj[MAXN];
+pair<lli,lli> down[MAXN];
+lli ans[MAXN];
+#define nchild second
+#define sumdist first
+int n;
+pair<lli,lli> dfs(int v, int p)
+{
+    pair<lli,lli> ret = {0,0};
+    for(auto c: adj[v]){
+        if(c == p) continue;
+        pair<lli,lli> temp = dfs(c, v);
+        ret.sumdist += temp.sumdist;    // value of each down tree
+        ret.nchild += temp.nchild ; // number of children
+        ret.sumdist += temp.nchild; // each connecting subtree
+    }
+    ret.s++; // v is included in its subtree for future
+    return down[v] = ret;
+}
+void dfs2(int v, int p)
+{
+    ///up will be down[p] - down[child] + 1
+    if (v!= 1)ans[v] = down[v].sumdist + ans[p] - down[v].sumdist  - down[v].nchild + ( n - down[v].nchild);
+    ///down[v] + (ans parent without taking v subtree (which is v.down + v.nchild) + number of connections needed to connect both subtree
+    for(auto c: adj[v]){
+        if(c== p) continue;
+        dfs2(c,v);
+    }
+}
+int main()
+{
+   cin>>n;
+   lp(i, n-1){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+      adj[b].pb(a);
+   }
+   ///get down values
+   dfs(1, 0);
+   ans[1] = down[1].sumdist;
+   //get up values
+   dfs2(1,0);
+   loop(i, 1, n)cout<<ans[i]<< " ";
+}
