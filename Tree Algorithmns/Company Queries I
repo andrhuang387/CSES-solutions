@@ -12,6 +12,8 @@ using namespace std;
 typedef vector<lli> vi;
 /*
     binary lifting
+    up[i][j] = <2^i, from node j
+    dp[i][j] = split into two jumps of 2^i-1 and 2^i-1 after . Since already have lowest jump 2^0, can build it up
 */
 const int ms = ceil(log2(MAXN));
 int up[ms][MAXN];
