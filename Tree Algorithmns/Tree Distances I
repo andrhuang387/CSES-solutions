@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200001
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    First first dp that gives the 2 largest values with its children
+    Then, using dp and another DFS, find the also the top 2 ans of each. 
+    As you dfs down ,compare the ans of parent, and if it hits child, dont use that
+    note that ans [0] is -1 because you add one to it
+*/
+
+int n, parent[MAXN];
+vector<int> adj[MAXN];
+pair<int,int> dp1[MAXN], dp2[MAXN] ,ans1[MAXN], ans2[MAXN]; /// value and child
+void solve(int v, int p)
+{
+    priority_queue<pair<int,int>> best;
+    best.push({0, -1});
+    best.push({0, -1});
+    for(auto c: adj[v]){
+        if(c == p) continue;
+        parent[c] = v;
+        solve(c, v);
+        best.push({dp1[c].f + 1, c});
+    }
+    dp1[v] = best.top();
+    best.pop();
+    dp2[v] = best.top();
+    best.pop();
+}
+void finalize(int v, int p)
+{
+    priority_queue<pair<int,int>> best;
+    best.push(dp1[v]), best.push(dp2[v]);
+    best.push({ans1[parent[v]].f +1, ans1[parent[v]].s}), best.push({ans2[parent[v]].f +1, ans2[parent[v]].s});
+    ans1[v] = best.top();
+    if(ans1[v].second == v) best.pop(), ans1[v] = best.top();
+    best.pop();
+    ans2[v] = best.top();
+    if(ans2[v].second == v) best.pop(), ans2[v] = best.top();
+    for(auto c: adj[v]){
+        if(c != p) finalize(c, v);
+    }
+}
+int main()
+{
+    cin>>n;
+    lp(i,n-1){
+       int a,b;
+       cin>>a>>b;
+       adj[a].pb(b);
+       adj[b].pb(a);
+    }
+    parent[1] = 0;
+    dp1[0] = {0, -1};
+    dp2[0] = {0, -1};
+    solve(1, 0);
+    ans1[0] = ans2[0] = {-1, -1};
+    finalize(1, 0);
+    loop(i,1,n) cout<<ans1[i].f<< " ";
+}
