@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" "
+#define printl(a) cout<<a<<endl;
+typedef vector<lli> vi;
+/*
+    topological sort
+    Know that cycle is only possible when it is under review (or when value  == 1)
+    so at each processing node,test child. If child is unvisited, dfs that. If it is also under process, then you got a cycle.
+    Return and print cycle of stack.
+*/
+int vis[MAXN];
+vector<int> adj[MAXN];
+vector<int> cyc;
+int dfs(int v)
+{
+    vis[v] = 1;
+    for(auto c: adj[v]){
+        cyc.pb(c);
+        if(vis[c] == 0) {
+            if(dfs(c)) return 1;
+        }
+        else if(vis[c] == 1) return 1;
+        cyc.pop_back();
+    }
+    vis[v] = 2;
+    return 0;
+}
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    lp(i,m){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+    }
+    loop(i,1,n){
+       cyc.pb(i);
+       if(!vis[i] && dfs(i)){
+          vector<int> ans = {*cyc.rbegin()};
+          for(auto j = cyc.rbegin()  +1; j != cyc.rend(); j++){
+             ans.pb(*j);
+             if(*j == *cyc.rbegin()) break;
+          }
+          cout<<ans.size()<<endl;
+          rev(ans);
+          for(auto it:ans) print(it);
+          return 0;
+
+       }
+    }
+    print("IMPOSSIBLE");
+    return 0;
+}
