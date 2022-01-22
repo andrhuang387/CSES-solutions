@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    have colors[a] be all the colors in subtree a
+    use a dfs. When you go up a tree, you want to swap smaller version onto the larger one (because time complexity O(nlogm)
+    since it is bottom up approach, the ans of the child is already fixed: so you can swap so that child is always the smaller one
+       regardless of a or b is appended, the resulting will be set of current v 
+    so you get answer= colors[a].size()
+*/
+vector<int> adj[MAXN];
+set<int> colors[MAXN];
+int ans[MAXN];
+int n;
+void processcolors(int v, int p)
+{
+    for(auto c: adj[v]){
+        if(c == p)continue;
+        processcolors(c,v);
+        if(colors[v].size() < colors[c].size()){
+            swap(colors[v], colors[c]);
+        }
+        for(auto it: colors[c]){
+            colors[v].insert(it);
+        }
+    }
+    ans[v] = colors[v].size();
+}
+int main()
+{
+    cin>>n;
+    loop(i,1,n){
+       int a;
+       cin>>a;
+       colors[i].insert(a);
+    }
+    lp(i,n-1){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+      adj[b].pb(a);
+    }
+    processcolors(1,1);
+    loop(i,1,n)cout<<ans[i]<<" " ;
+    cout<<endl;
+    return 0;
+}
