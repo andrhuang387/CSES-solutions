@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    topological sort
+    in the answer vector, if at any time a child of a node has an earlier value than its parent, then you know that there is a cycle
+*/
+vector<int> ans;
+vector<bool> visited;
+vector<int> adj[MAXN];
+void dfs(int v)
+{
+    visited[v] = true;
+    for(auto u: adj[v]){
+        if(!visited[u]) dfs(u);
+    }
+    ans.pb(v);
+}
+int main()
+{
+    int n, m;
+    cin>>n>>m;
+    lp(i,m){
+       int a,b;
+       cin>>a>>b;
+       a--, b--;
+       adj[a].pb(b);
+    }
+    visited.assign(n,false);
+    for(int i  =0; i<n; i++){
+        if(!visited[i]) dfs(i);
+    }
+    ///get expected answer
+    reverse(ans.begin(), ans.end());
+    ///check if valid 
+    vector<int> ind(n);
+    lp(i,n) ind[ans[i]]= i;
+    lp(i,n){
+       for(auto j: adj[i]){
+         if(ind[j] <= ind[i]){
+            cout<<"IMPOSSIBLE"<<endl;
+            exit(0);
+         }
+       }
+    }
+    for(auto it: ans)cout<<it+1<< " ";
+    cout<<endl;
+    return 0;
+}
