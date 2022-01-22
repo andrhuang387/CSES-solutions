@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 2e9
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" "
+#define printl(a) cout<<a<<endl;
+typedef vector<lli> vi;
+/*
+    DP
+    start from beginning
+    If if not seen, recursively DFS on it. then ,dp[node] will be the maximum
+    each upper will be compared to its children, and take largest
+*/
+vector<int> adj[MAXN];
+int child[MAXN], dp[MAXN], vis[MAXN], n,m;
+void dfs(int s)
+{
+    vis[s] = true;
+    for(auto u: adj[s]){
+        if(!vis[u]) dfs(u);
+        if(dp[s] < dp[u] +1 && dp[u] != -INF)
+        {
+            dp[s] = dp[u] + 1;
+            child[s] = u;
+        }
+    }
+}
+void test()
+{
+    child[n] = -1;
+    loop(i,1,n-1) dp[i] = -INF;
+    loop(i,1,n){
+       if(!vis[i]) dfs(i);
+    }
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin>>n>>m;
+    lp(i,m){
+       int a,b;
+       cin>>a>>b;
+       adj[a].pb(b);
+    }
+    test();
+    if(dp[1] == -INF){
+        cout<<"IMPOSSIBLE";
+        return 0;
+    }
+    vector<int >ans;
+    int v = 1;
+    while(v!= -1){
+        ans.pb(v);
+        v = child[v];
+    }
+    cout<<ans.size()<<endl;
+    for(auto it :ans) print(it);
+
+}
