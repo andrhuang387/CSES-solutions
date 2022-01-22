@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000000000000009
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+typedef vector<lli> vi;
+/*
+    LCA
+    set each endpoint to +1. then LCA to -=2. When you do another DFS, add all values inside the subtree (lca -=2 so it doesnt propagate upwards)
+    then loop through all queries and +1 to include LCA to the path
+*/
+int n,m;
+vector<int> adj[MAXN];
+const int ms = ceil(log2(MAXN));
+int timer = 0;
+int tin[MAXN], tout[MAXN];
+int up[ms][MAXN];///error may be here
+int val[MAXN];
+void dfs(int v, int p)
+{
+    tin[v] = ++timer;
+    up[0][v] = p;
+    loop(i, 1, ms-1) up[i][v] = up[i-1][up[i-1][v]];
+    for(auto c: adj[v]){
+        if(c == p)continue;
+        dfs(c, v);
+    }
+    tout[v] = ++timer;
+}
+bool ancestor(int a,  int b)
+{
+    return (tin[a] <= tin[b] && tout[a] >= tout[b]);
+}
+int lca(int a, int b)
+{
+    if(ancestor(a,b))return a;
+    if(ancestor(b,a)) return b;
+    for(int i = ms-1; i>=0; i--){
+        if(!ancestor(up[i][a], b)) a = up[i][a];
+    }
+    return up[0][a];
+}
+void dfs2(int v, int p)
+{
+    for(auto c: adj[v]){
+        if(c == p )continue;
+        dfs2(c, v);
+        val[v] += val[c];
+    }
+}
+int main()
+{
+   cin>>n>>m;
+   lp(i,n-1){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+      adj[b].pb(a);
+   }
+   dfs(1, 1);
+   vector<int> qry;
+   lp(i, m)
+   {
+       int a, b;
+       cin>>a>>b;
+       val[a]++, val[b]++;
+       val[lca(a,b)] -=2;
+       qry.pb(lca(a,b));
+
+   }
+   dfs2(1,1);
+   for(auto it: qry) val[it]++;
+   loop(i,1,n)cout<<val[i]<< " " ;
+}
