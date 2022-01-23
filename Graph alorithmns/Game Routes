@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 2e9
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" "
+#define printl(a) cout<<a<<endl;
+typedef vector<lli> vi;
+/*
+    start from end and continue until you get to node. use DP to calculate the value of each subpath
+    add up to get number of paths of 1
+*/
+
+vector<int> adj[MAXN];
+int dp[MAXN];
+bool vis[MAXN];
+void dfs(int v)
+{
+    vis[v] = true;
+    for(auto c: adj[v])
+    {
+        if(!vis[c])dfs(c);
+        dp[v]  = (dp[v]  +dp[c])%mod;
+    }
+
+}
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    lp(i,m){
+      int a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+    }
+    dp[n] = 1;
+    dfs(1);
+    printl(dp[1]);
+    return 0;
+}
