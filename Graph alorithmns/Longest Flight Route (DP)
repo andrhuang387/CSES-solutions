@@ -37,9 +37,7 @@ void test()
 {
     child[n] = -1;
     loop(i,1,n-1) dp[i] = -INF;
-    loop(i,1,n){
-       if(!vis[i]) dfs(i);
-    }
+     dfs(1);
 }
 int main()
 {
