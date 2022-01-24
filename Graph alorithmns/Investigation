@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 100000000000000000
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" "
+#define printl(a) cout<<a<<endl;
+typedef vector<lli> vi;
+/*
+     dijkstras but keep track of dist, numpath, minpath, maxpath
+     extra case if weight equals: update it 
+     PLEASE AC
+*/
+struct stuff
+{
+    lli dist =  INF, nummin = 0, minpath = INF, maxpath = 0;
+};
+vector<pair<lli,lli>> adj[MAXN];
+vector<stuff> node(MAXN);
+bool processed[MAXN];
+void dijkstras()
+{
+    node[1].dist = 0;node[1].maxpath = 0, node[1].minpath = 0; node[1].nummin = 1;
+    priority_queue<pair<lli,lli>> q;
+    q.push({0, 1});
+    while(!q.empty()){
+        lli a = q.top().second;q.pop();
+        if(processed[a]) continue;
+        processed[a] = true;
+        for(auto u: adj[a]){
+            lli b = u.first, w = u.second;
+            if(node[a].dist + w < node[b].dist){
+                stuff temp;
+                temp.dist = node[a].dist + w;
+                temp.minpath = node[a].minpath + 1;
+                temp.maxpath = node[a].maxpath + 1;
+                temp.nummin = node[a].nummin;
+                node[b] = temp;
+                q.push({-node[b].dist, b});
+            }
+            else if(node[a].dist + w == node[b].dist){
+                //if(b == 3) cout<<"TEST"<< a<< " "<<node[a].nummin<< "  "<<node[b].nummin<<endl;
+                node[b].nummin= (node[b].nummin + node[a].nummin)%mod;
+                node[b].minpath = min(node[b].minpath, node[a].minpath + 1);
+                node[b].maxpath = max(node[b].maxpath, node[a].maxpath + 1);
+            }
+        }
+    }
+}
+int main()
+{
+    int n, m;
+    cin>>n>>m;
+    lp(i,m){
+        lli a,b,w;
+        cin>>a>>b>>w;
+        adj[a].pb({b,w});
+    }
+    dijkstras();
+    cout<<node[n].dist<< " "<<node[n].nummin<< " "<<node[n].minpath<< " "<<node[n].maxpath<<endl;
+}
