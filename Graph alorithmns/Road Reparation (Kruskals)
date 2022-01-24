@@ -17,40 +17,45 @@ typedef vector<lli> vi;
 /*
      kruskals. Compare edges then for all edges, see if join diferent component and join. Print result
 */
+vector<tuple<int,int,int>> edge;
 lli link[MAXN], len[MAXN];
-vector<tuple<int,int,int>>edges;
-int n,m;
-int find(int a){
-    while(a!=link[a]) a=link[a];
+int find(int a)
+{
+    while(link[a] != a) a = link[a];
     return a;
 }
-void join(int a, int b){
-    if (find(a)==find(b)) return;
+void join(int a,int b)
+{
     int x = find(a), y = find(b);
-    if (len[x]>len[y]) swap(x,y);
-    len[y]+=len[x];
+    if(x > y ) swap(x,y); //small to large
     link[x] = y;
+    len[y]  += len[x];
+
 }
 int main()
 {
+    int n,m;
     cin>>n>>m;
     lp(i,m){
-       int w,a,b;
+       int a,b,w;
        cin>>a>>b>>w;
-       edges.pb({w, a,b});
+       edge.pb({w,a,b});
     }
-    sort(edges.begin(), edges.end());
-    loop(i,1,n){link[i]=i; len[i]=1;}
+    sort(edge.begin(), edge.end());
+    loop(i,1,n){
+       link[i] = i;
+       len[i]  =1;
+    }
     lli cost = 0;
-    for (auto [w,a,b]:edges){
-        if (find(a)==find(b)) continue;
-        cost+=w;
+    for(auto [w,a,b]: edge){
+        if(find(a) == find(b))continue;
+        cost += w;
         join(a,b);
     }
-    int count = 0;
-    loop(i, 1,n){
-        if(link[i] == i) count++;
+    int ct  = 0;
+    loop(i,1,n) if(link[i] == i) ct++;
+    if(ct == 1) {
+        cout<<cost<<endl;
     }
-    if(count != 1) {printl("IMPOSSIBLE");}
-    else printl(cost);
+    else printl("IMPOSSIBLE");
 }
