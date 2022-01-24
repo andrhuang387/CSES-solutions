@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 200005
+#define INF 1000000005
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" "
+#define printl(a) cout<<a<<endl;
+typedef vector<lli> vi;
+/*
+     feels like a bianry lifting problem . However, the only difference
+     is that it is not a tree. That doesn't matter tho
+     PLEASE AC
+*/
+#define MAXK 1000000005
+const int ms = ceil(log2(MAXK));
+int up[ms][MAXN];
+int jmp(int v, int d)
+{
+    lp(i, ms){
+       if(d & (1<<i)) v = up[i][v];
+    }
+    return v;
+}
+int main()
+{
+    int n,q;
+    cin>>n>>q;
+    loop(i,1, n){
+       int x;
+       cin>>x;
+       up[0][i] = x;
+    }
+    loop(i, 1, ms - 1){
+       loop(j, 1, n){
+           up[i][j] = up[i-1][up[i-1][j]];
+       }
+    }
+    lp(i,q){
+       int v,d;
+       cin>>v>>d;
+       printl(jmp(v,d));
+    }
+}
