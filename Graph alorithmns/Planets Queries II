@@ -18,9 +18,9 @@ typedef vector<lli> vi;
      1. calculate binary jumping
      2. find components and their distance from cycle source
      3. three cases
-         a. x in front of y, then dist is x  -y
-         b. x after y. Then distance if x  + (source - y)
-         c. not same distance: then impossible to get to it
+         a. x in front of y and when jumping can get to y by teleporters, then dist is x  -y
+         b. x after y and can get to y by heading to source and from source to y. Then distance if x  + (source - y)
+         c. not same tree or on same tree but cant get to other: then impossible to get to it
 */
 #define MAXK 1000000005
 const int ms = ceil(log2(MAXK));
