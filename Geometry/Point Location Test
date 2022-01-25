@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 2000005
+#define INF 10000000000000005
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" ";
+#define printl(a) cout<<a<<endl;
+#define debug cout<<"I am here"<<endl;
+#define rep(n) for(int i = 0; i< n; i++)
+typedef vector<lli> vi;
+/*
+     use cross product |AXB| = |a| |b| sin theta. . So, if result is positive, then your angle is between o and 180 so it is left, . If result negative, angle between 180 and 360 so right 
+*/
+int n;
+int main()
+{
+   cin>>n;
+   rep(n){
+      double x1,y1,x2,y2,x3,y3;
+      cin>>x1>>y1>>x2>>y2>>x3>>y3;
+      int cp = (x2-x1)*(y3-y1) - (y2-y1)*(x3-x1);
+      if(cp == 0) printl("TOUCH");
+      if(cp >0) printl("LEFT");
+      if(cp < 0 ) printl("RIGHT");
+   }
+
+}
