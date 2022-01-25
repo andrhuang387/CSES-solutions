@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f first
+#define s second
+#define pb push_back
+#define MAXN 2000005
+#define INF 10000000000000005
+#define mod 1000000007
+#define loop(i,a,b) for  (int i=(a); i<= (signed)(b); i++)
+#define lp(i,a) for(int i = 0;i<(signed)(a); i++)
+#define rev(a) reverse(a.begin(), a.end())
+#define print(a) cout<<a<<" ";
+#define printl(a) cout<<a<<endl;
+#define debug cout<<"I am here"<<endl;
+#define rep(n) for(int i = 0; i< n; i++)
+typedef vector<lli> vi;
+/*
+     shoelace theorem
+*/
+int n;
+vector<pair<lli,lli>> cord;
+int main()
+{
+   cin>>n;
+   rep(n){
+      lli a,b;
+      cin>>a>>b;
+      cord.pb({a,b});
+   }
+   lli fir = 0 ;
+   lli sec = 0;
+   lp(i,n){
+      fir+= cord[i].f * cord[(i+1)%n].s;
+      sec+= cord[i].s * cord[(i+1)%n].f;
+   }
+   cout<<abs(fir - sec);
+}
